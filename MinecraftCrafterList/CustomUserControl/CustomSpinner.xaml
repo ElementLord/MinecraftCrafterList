@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="MinecraftCrafterList.CustomUserControl.CustomSpinner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftCrafterList.CustomUserControl"
+             mc:Ignorable="d" Width="75" Height="70">
+    <Grid Width="75" Height="70" >
+        <TextBox x:Name="SpinDisplay" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="20" Margin="0,25,0,0" 
+                 HorizontalContentAlignment="Right" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="0" MaxLines="1" 
+                 PreviewTextInput="SpinDisplay_PreviewTextInput" TextChanged="SpinDisplay_TextChanged"/>
+        <Button x:Name="SpinUp" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="20" Content="+" 
+                Click="SpinUp_Click" ClickMode="Release"/>
+        <Button x:Name="SpinDown" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="20" Margin="0,50,0,0" 
+                Content="-" Click="SpinDown_Click" ClickMode="Release"/>
+    </Grid>
+</UserControl>

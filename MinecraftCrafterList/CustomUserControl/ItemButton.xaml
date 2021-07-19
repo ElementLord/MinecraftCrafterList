@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="MinecraftCrafterList.CustomUserControl.ItemButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftCrafterList.CustomUserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="45" d:DesignWidth="45">
+    <Grid>
+        <!--Height="45" Width="45"-->
+        <Button x:Name="ButtonForItem" Height="45" Width="45" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,0,0,0" Background="{x:Null}">
+            <Button.BorderBrush>
+                <SolidColorBrush Color="Black" Opacity="0"/>
+            </Button.BorderBrush>
+            <Button.ToolTip>
+                <ToolTip BorderBrush="#FF300862" Foreground="{x:Null}">
+                    <ToolTip.Background>
+                        <SolidColorBrush Color="#FF10020F" Opacity="0.85"/>
+                    </ToolTip.Background>
+                    <StackPanel x:Name="ToolTipStack">
+                        <Label x:Name="ToolTipLabel" Padding="0,0,0,0">
+                            <!--Content="{Binding ItemName}"--><!--Foreground="{Binding TextColour}"-->
+                            <Label.Effect>
+                                <DropShadowEffect x:Name="ToolTipDropShadow" ShadowDepth="3" Direction="315" Opacity="0.35" BlurRadius="0"/>
+                                <!--Color="{Binding ShadowColour}"-->
+                            </Label.Effect>
+                        </Label>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
+            <Button.Content>
+                <Grid Height="43" Width="43" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.Background>
+                        <ImageBrush x:Name="ImageForItem" Stretch="Uniform"/>
+                        <!--ImageSource="{Binding ItemImage}" -->
+                    </Grid.Background>
+                    <Label x:Name="Quanity" FontSize="24" Height="45" Width="45" Foreground="White" Background="{x:Null}" Padding="0,0,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom"/>
+                    <!--Content="{Binding ItemQuanity}"-->
+                </Grid>
+            </Button.Content>
+        </Button>
+    </Grid>
+</UserControl>

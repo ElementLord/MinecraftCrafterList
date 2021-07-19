@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="MinecraftCrafterList.CustomUserControl.NoRecipeUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftCrafterList.CustomUserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="362">
+    <Grid>
+        <local:UIBackground HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="362"/>
+        <Label Height="30" Width="87" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Content="No Recipe" Margin="5,5,0,0"/>
+        <!--x:Name="UIName"-->
+        <local:ItemSlot x:Name="Result" Height="61" Width="61" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="149,70,0,0"/>
+    </Grid>
+</UserControl>

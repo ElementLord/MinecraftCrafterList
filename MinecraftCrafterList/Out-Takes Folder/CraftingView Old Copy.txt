@@ -1,0 +1,1220 @@
+﻿using MinecraftCrafterList.Controller;
+using MinecraftCrafterList.CustomUserControl;
+using MinecraftCrafterList.Model;
+using MinecraftCrafterList.View;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace MinecraftCrafterList.View
+{
+    /// <summary>
+    /// Interaction logic for CraftingView.xaml
+    /// </summary>
+    public partial class CraftingView : Page
+    {
+        //Full Lists
+        //public static List<Recipe> fullRecipeList = RecipeList.GatherRecipes();
+        //public static List<Item> fullItemList = ItemList.GatherItems2(fullRecipeList);
+
+        //Crafting Lists and Variables
+        public static List<Item> findCraftingStack = new List<Item>();
+        public static List<Item> craftingStack = new List<Item>();
+        public static List<int> craftingItemsCount = new List<int>();
+        public static int numOfSelectedItems = 0;
+
+        //Multi-Item Selection Variables
+        public static bool firstTimeMulti = false;
+
+        //Solid Colour Brushes 
+        //public static SolidColorBrush whiteText = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+        //public static Color whiteTextShadow = Color.FromRgb(63, 61, 62);    //public static SolidColorBrush whiteTextShadow = new SolidColorBrush(Color.FromRgb(63, 61, 62));
+        //public static SolidColorBrush greyText = new SolidColorBrush(Color.FromRgb(171, 169, 170));
+        //public static Color greyTextShadow = Color.FromRgb(57, 52, 53);
+        //public static SolidColorBrush blueText = new SolidColorBrush(Color.FromRgb(91, 88, 255));
+        //public static Color blueTextShadow = Color.FromRgb(18, 24, 58);     //public static SolidColorBrush BlueTextShadow = new SolidColorBrush(Color.FromRgb(18, 24, 58));
+        //public static SolidColorBrush redText = new SolidColorBrush(Color.FromRgb(205, 84, 83));
+        //public static Color redTextShadow = Color.FromRgb(81, 13, 13);
+
+        //public static SolidColorBrush toolTipBackground = new SolidColorBrush(Color.FromRgb(16, 2, 15)) { Opacity = 0.85 };   //92, 14, 140
+        //public static SolidColorBrush toolTipBorder = new SolidColorBrush(Color.FromRgb(44, 8, 98)); //173, 53, 242
+
+        //public static SolidColorBrush itemButtonBorderBase = new SolidColorBrush(Color.FromRgb(112, 112, 112)) { Opacity = 0 };
+        //public static SolidColorBrush itemButtonBorderRed = new SolidColorBrush(Color.FromRgb(255, 0, 0)) { Opacity = 100 };
+
+        //public static SolidColorBrush itemSlotBackground = new SolidColorBrush(Color.FromRgb(139, 139, 139));
+        //public static SolidColorBrush itemSlotBorderTopLeft = new SolidColorBrush(Color.FromRgb(55, 55, 55));
+        //public static SolidColorBrush itemSlotBorderBottomRight = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+        //public static SolidColorBrush BackUIBackground = new SolidColorBrush(Color.FromRgb(198, 198, 198));
+        //public static SolidColorBrush BackUIBorderTopLeft = new SolidColorBrush(Color.FromRgb(219, 219, 219));
+        //public static SolidColorBrush BackUIBorderBottomRight = new SolidColorBrush(Color.FromRgb(91, 91, 91));
+
+        public CraftingView()
+        {
+            int gridColumn = 0;
+            int gridRow = 0;
+            int maxColumns = 4;
+
+            InitializeComponent();
+
+            foreach (Item i in MainWindow.fullItemList)
+            {
+                //ItemButtonCreator(i,/*i.Name, i.ImageUrl,*/ 0, 0, /*0, 0,*/ true, true, gridColumn, gridRow, false, /*0,*/ ItemDisplay);
+                ItemButton b = new ItemButton(i, false, true);
+                b.SetGridPosition(gridColumn, gridRow);
+                ItemDisplay.Children.Add(b);
+
+                gridColumn++;
+
+                if (gridColumn > (maxColumns - 1))
+                {
+                    ItemDisplay.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(45) });
+
+                    gridColumn = 0;
+                    gridRow++;
+                }
+            }
+        }
+
+        //Menu Control Actions
+        /*private void FileMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItemPressed = (MenuItem)sender;
+
+            if (menuItemPressed.Name.Contains("Exit"))
+            {
+                Application.Current.Shutdown();
+            }
+        }
+
+        private void ModesMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItemPressed = (MenuItem)sender;
+
+            if (menuItemPressed.Name.Contains("Single_Item"))
+            {
+                Single_Item.IsChecked = true;
+                Multiple_Items.IsChecked = false;
+                //ClearListAndView(true, true, false);
+                firstTimeMulti = false;
+            }
+            else if (menuItemPressed.Name.Contains("Multiple_Items"))
+            {
+                Single_Item.IsChecked = false;
+                Multiple_Items.IsChecked = true;
+                //ClearListAndView(true, true, false);
+            }
+            else if (menuItemPressed.Name.Contains("Run_Multi_Craft"))
+            {
+                if (Multiple_Items.IsChecked == true)
+                {
+                    if (findCraftingStack.Count() == 0)
+                    {
+                        MessageBox.Show("No items have been selected.", "Error");
+                    }
+                    else
+                    {
+                        //ClearListAndView(false, false, true);
+                        RunTheStuff();
+                        firstTimeMulti = false;
+
+                        foreach (Button b in ItemDisplay.Children)
+                        {
+                            b.BorderBrush = itemButtonBorderBase;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("'Multiple Items' Modes must be selected to use 'Run Multi Craft'.", "Error");
+                }
+            }
+        }
+
+        private void ItemsMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItemPressed = (MenuItem)sender;
+
+            if (menuItemPressed.Name.Contains("Add_Item"))
+            {
+                MainWindow.PageChange(1);
+            }
+            else if (menuItemPressed.Name.Contains("Edit_Item"))
+            {
+
+            }
+            else if (menuItemPressed.Name.Contains("Remove_Item"))
+            {
+
+            }
+        }*/
+
+        //Dynamic Control Actions
+        /*private void ItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button itemButtonPressed = (Button)sender;
+            IEnumerable<Item> itemQuery = ItemList.ItemSearch(fullItemList, itemButtonPressed.Name.Replace('_', ' '));
+            Item resultItem = itemQuery.First();
+
+            if (Single_Item.IsChecked == true)
+            {
+                ClearListAndView(true, true, true);
+
+                findCraftingStack.Add(resultItem);
+                craftingStack.Add(resultItem);
+                numOfSelectedItems = 1;
+
+                RunTheStuff();
+            }
+            else if (Multiple_Items.IsChecked == true)
+            {
+                if (firstTimeMulti == false)
+                {
+                    ClearListAndView(true, true, true);
+                    numOfSelectedItems = 0;
+                    firstTimeMulti = true;
+                }
+
+                if (ItemList.ItemSearch(findCraftingStack, resultItem.Name).Count() == 1)
+                {
+                    findCraftingStack.Remove(resultItem);
+                    craftingStack.Remove(resultItem);
+                    itemButtonPressed.BorderBrush = itemButtonBorderBase;
+                    numOfSelectedItems--;
+                }
+                else
+                {
+                    findCraftingStack.Add(resultItem);
+                    craftingStack.Add(resultItem);
+                    itemButtonPressed.BorderBrush = itemButtonBorderRed;
+                    numOfSelectedItems++;
+                }
+            }
+        }*/
+
+        /*private void SpinnerButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button spinnerButtonPressed = (Button)sender;
+            int rowIndex = Grid.GetRow(spinnerButtonPressed);
+
+            TextBox spinner = (TextBox)SearchView(rowIndex, "Spinner_Display_");
+            int amount = int.Parse(spinner.Text);
+
+            int[] itemsCount = new int[craftingItemsCount.Count];
+
+            if (spinnerButtonPressed.Name.Contains("Spinner_UP_"))
+            {
+                amount++;
+            }
+            else if (spinnerButtonPressed.Name.Contains("Spinner_DOWN_") && amount > 0)
+            {
+                amount--;
+            }
+
+            for (int i = 0; i < numOfSelectedItems; i++)
+            {
+                itemsCount[i] = 1;
+            }
+
+            spinner.Text = amount + "";
+
+            ReCalculate(0, itemsCount);
+        }*/
+
+        /*private void SpinnerTextBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            int[] itemsCount = new int[craftingItemsCount.Count];
+
+            for (int i = 0; i < numOfSelectedItems; i++)
+            {
+                itemsCount[i] = 1;
+            }
+
+            ReCalculate(0, itemsCount);
+        }*/
+
+        //private void RecipeComboBox_SelectionChanged(object sender, RoutedEventArgs e)
+        //{
+        //    ComboBox comboBoxChanged = (ComboBox)sender;
+        //    Item itemRecipeChanged = ItemList.ItemSearch(fullItemList, comboBoxChanged.Uid.Replace("Recipe_List_", "").Replace("_", " ")).First();
+        //    itemRecipeChanged.SelectedRecipe = comboBoxChanged.SelectedIndex;
+
+        //    List<Item> item = new List<Item>();
+        //    for (int i = 0; i < numOfSelectedItems; i++)
+        //    {
+        //        item.Add(craftingStack.ElementAt(i));
+        //    }
+
+        //    ClearListAndView(true, true, true);
+        //    findCraftingStack = new List<Item>(item);
+        //    craftingStack = new List<Item>(item);
+        //    RunTheStuff();
+        //}
+        /**/
+
+
+        //Crafting View Elements Methods
+        public void RunTheStuff()
+        {
+            //ClearListAndView(true, true, true);
+            
+            List<Item> craftingStackPreChange = new List<Item>(craftingStack);
+
+            FindAllCraftingItems();
+
+            for (int i = 0; i < craftingStack.Count(); i++)
+            {
+                craftingItemsCount.Add(0);
+            }
+
+            foreach (Item j in craftingStackPreChange)
+            {
+                craftingItemsCount[craftingStack.IndexOf(j)]++;
+            }
+
+            DisplayCraft(0, Crafting_List);/*ingReceipe*/
+        }
+
+        public void FindAllCraftingItems()
+        {
+            Item frontItem = findCraftingStack.First();
+
+            foreach (string name in frontItem.CurrentRecipeItemSlots())
+            {
+                IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(MainWindow.fullItemList, name); //Check item 
+
+                if (craftingItemQuery.Count() != 0)
+                {
+                    Item craftingItem = craftingItemQuery.First();
+                    /* Loop Detector */
+                    bool loopDetected = false;
+                    foreach (string s in craftingItem.CurrentRecipeItemSlots())
+                    {
+                        if (s.Equals(frontItem.Name))
+                        {
+                            loopDetected = true;
+                        }
+                    }
+
+                    if (loopDetected)
+                    {
+                        craftingItem.SelectedRecipe++;
+                        if (craftingItem.SelectedRecipe >= craftingItem.Recipes.Count())
+                        {
+                            craftingItem.SelectedRecipe = 0;
+                        }
+                    }
+                    ////
+                    if (!craftingStack.Contains(craftingItem))
+                    {
+                        craftingStack.Add(craftingItem);
+                    }
+                    else
+                    {
+                        craftingStack.Remove(craftingItem);
+                        craftingStack.Add(craftingItem);
+                    }
+
+                    if (!findCraftingStack.Contains(craftingItem))
+                    {
+                        findCraftingStack.Add(craftingItem);
+                    }
+                    else
+                    {
+                        findCraftingStack.Remove(craftingItem);
+                        findCraftingStack.Add(craftingItem);
+                    }
+                }
+            }
+
+            if (findCraftingStack.Count() > 1)
+            {
+                findCraftingStack.Remove(frontItem);
+                FindAllCraftingItems();
+            }
+            else
+            {
+                findCraftingStack.Remove(frontItem);
+            }
+        }
+
+        public void DisplayCraft(int step, Grid craftingList)
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            //int craftingTypeNum = (int)currentItem.CurrentRecipeCraftingType();
+            //int numOfUsedItems = 0;
+            //double[,] itemMargins = { };
+            //double[,] resultMargins = new double[5, 2]
+            //{
+            //    { 66, 93 },     //No Crafting Result Slot
+            //    { 297, 93 },    //Crafting Table Result Slot
+            //    { 201, 93 },    //Smelting Result Slot
+            //    { 297, 93 },    //Brewing Result Slot
+            //    { 297, 93 }     //Other Result Slot
+            //};
+
+            //double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            //double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            //double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            //double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            craftingList.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+            CraftingPanel cp = new CraftingPanel(currentItem, step);
+            cp.SetGridPosition(0, step);
+            craftingList.Children.Add(cp);
+
+            //switch (currentItem.CurrentRecipeCraftingType())
+            //{
+            //    case Recipe.CraftingType.No_Recipe:
+            //        //amountOfCrafts = craftingItemsCount.ElementAt(step);
+            //        //totalFromCraft = craftingItemsCount.ElementAt(step);
+            //        //totalStackFromCraft = craftingItemsCount[step] / (currentItem.StackSize * 1.0);
+            //        //remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+            //        break;
+            //    case Recipe.CraftingType.Crafting_Table:
+            //        numOfUsedItems = 9;
+            //        //itemMargins = new double[9, 2]  //double[,] craftingTableMargins; 
+            //        //{
+            //        //    { 17, 44 },     //Left Top Slot
+            //        //    { 66, 44 },     //Centre Top Slot
+            //        //    { 115, 44 },    //Right Top Slot
+            //        //    { 17, 93 },     //Left Middle Slot
+            //        //    { 66, 93 },     //Centre Middle Slot
+            //        //    { 115, 93 },    //Right Middle Slot
+            //        //    { 17, 142 },    //Left Bottom Slot
+            //        //    { 66, 142 },    //Centre Bottom Slot
+            //        //    { 115, 142 }    //Right Bottom Slot
+            //        //};
+            //        break;
+            //    case Recipe.CraftingType.Smelting:
+            //        numOfUsedItems = 1;
+            //        //itemMargins = new double[1, 2]  //double[,] smeltingMargins;
+            //        //{
+            //        //    { 66, 44 },     //Item Slot
+            //        //};
+            //        break;
+            //    case Recipe.CraftingType.Brewing:
+            //        numOfUsedItems = 4;
+            //        //itemMargins = new double[4, 2]  //double[,] brewingMargins
+            //        //{
+            //        //    { 91, 24 },     //Item Slot    
+            //        //    { 27, 118 },    //Bottle Slot 1
+            //        //    { 91, 142 },    //Bottle Slot 2
+            //        //    { 155, 118 }    //Bottle Slot 3
+            //        //};
+            //        break;
+            //    case Recipe.CraftingType.Other:
+            //        numOfUsedItems = 2;
+            //        //itemMargins = new double[2, 2]   //double[,] otherMargins 
+            //        //{
+            //        //    { 17, 93 },     //Left Slot
+            //        //    { 115, 93 },    //Right Slot
+            //        //};
+            //        break;
+            //}
+
+            //Displays the Crafting Table UI
+            //Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            //AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            //ItemButtonCreator(currentItem, resultMargins[craftingTypeNum, 0], resultMargins[craftingTypeNum, 1]/*297, 93*/, false, false, 0, 0, true, craftingGrid);
+
+            //Displays the number of times the crafting operation is to be done
+            //Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            //AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            //Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            //AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            //Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            //AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            //Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            //AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            //ComboBox recipeBox = NewComboBox(currentItem);
+            //AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            //Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            //AddingGridChildern(craftingList, itemExtra, 0, step);
+            //TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            //AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            //Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            //AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            //Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            //AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            //Displays the items used in the crafting reciepe
+            //for (int i = 0; i < numOfUsedItems; i++)
+            //{
+            //    IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(MainWindow.fullItemList, currentItem.CurrentRecipeItemSlots()[i]);
+
+            //    if (craftingItemQuery.Count() != 0)
+            //    {
+            //        //ItemButtonCreator(craftingItemQuery.First(), itemMargins[i, 0], itemMargins[i, 1], false, false, 0, 0, false, craftingGrid);
+
+            //        for (int j = 0; j < cp.AmountOfCrafts; j++)
+            //        {
+            //            craftingItemsCount[craftingStack.IndexOf(craftingItemQuery.First())]++;
+            //        }
+            //    }
+            //}
+
+            ++step;
+
+            if (step < craftingStack.Count())
+            {
+                DisplayCraft(step, craftingList);/*craftingStack.ElementAt(step),*//*ingReceipe*/
+            }
+
+        }
+
+
+
+        //Control Creators and Editors
+        /**/
+        //public void ItemButtonCreator(Item item, /*string name, string imageURL,*/ double marginLeft, double marginTop, /*double marginRight, 
+        //    double marginBottom,*/ bool useClick, bool useColumnRow, int columnPos, int rowPos, bool showQuanity, /*int quanity,*/ Grid parent)
+        //{
+        //    SolidColorBrush textColour = whiteText;
+        //    Color shadowColour = whiteTextShadow;
+
+        //    switch (item.NameColor)
+        //    {
+        //        case Item.TextColor.White:
+        //            //textColour = whiteText;
+        //            //shadowColour = whiteTextShadow;
+        //            break;
+        //        case Item.TextColor.Grey:
+        //            textColour = greyText;
+        //            shadowColour = greyTextShadow;
+        //            break;
+        //        case Item.TextColor.Blue:
+        //            textColour = blueText;
+        //            shadowColour = blueTextShadow;
+        //            break;
+        //        case Item.TextColor.Red:
+        //            textColour = redText;
+        //            shadowColour = redTextShadow;
+        //            break;
+        //    }
+
+        //    Button b = new Button()
+        //    {
+        //        Name = item.Name.Replace(' ', '_'),
+        //        //ToolTip = name, 
+        //        Height = 45,
+        //        Width = 45,
+        //        //Background = new ImageBrush(new BitmapImage(new Uri(imageURL, UriKind.Relative))) { Stretch = Stretch.Uniform },
+        //        Background = null,
+        //        Content = new Grid()
+        //        {
+        //            HorizontalAlignment = HorizontalAlignment.Center,
+        //            VerticalAlignment = VerticalAlignment.Center,
+        //            Height = 43,
+        //            Width = 43,
+        //            Background = new ImageBrush(new BitmapImage(new Uri(item.ImageUrl, UriKind.Relative))) { Stretch = Stretch.Uniform }
+        //        },
+        //        BorderBrush = itemButtonBorderBase,
+        //        Margin = new Thickness(marginLeft, marginTop, 0, 0), /*marginRight, marginBottom*/
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        //HorizontalContentAlignment = HorizontalAlignment.Center,
+        //        //VerticalContentAlignment = VerticalAlignment.Center,
+        //        Padding = new Thickness(0, 0, 0, 0),
+        //    };
+
+        //    StackPanel sp = new StackPanel();
+        //    sp.Children.Add(new Label()
+        //    {
+        //        Content = item.Name,
+        //        Padding = new Thickness(0, 0, 0, 0),
+        //        Foreground = textColour/*whiteText*/,
+        //        Effect = new DropShadowEffect()
+        //        {
+        //            ShadowDepth = 3,
+        //            Direction = 315,
+        //            Color = shadowColour,   /*whiteTextShadow*/
+        //            Opacity = 0.35,
+        //            BlurRadius = 0.0
+        //        }
+        //    });
+
+        //    if (!item.FlavourText1.Equals("-"))
+        //    {
+        //        sp.Children.Add(NewFlavourTextBlock(item.FlavourText1, item.FlavourTextColor1));
+        //    }
+
+        //    if (!item.FlavourText2.Equals("-"))
+        //    {
+        //        sp.Children.Add(NewFlavourTextBlock(item.FlavourText2, item.FlavourTextColor2));
+        //    }
+
+        //    //tooltipBorder.Child = sp;
+        //    ToolTip tt = new ToolTip()
+        //    {
+        //        Content = sp,
+        //        Background = toolTipBackground,
+        //        BorderBrush = toolTipBorder,
+        //    };
+        //    b.ToolTip = tt;/*tooltipBorder*/
+
+        //    if (useClick) //Could be condenced with IF statement
+        //    {
+        //        b.ClickMode = ClickMode.Release;
+        //        b.Click += ItemButton_Click;
+        //    }
+
+        //    if (useColumnRow)
+        //    {
+        //        Grid.SetColumn(b, columnPos);
+        //        Grid.SetRow(b, rowPos);
+        //    }
+
+        //    parent.Children.Add(b);
+
+        //    if (showQuanity && (item.CurrentRecipeNumPerCraft() /*quanity*/ > 1))
+        //    {
+        //        Label l = new Label()
+        //        {
+        //            Name = item.Name.Replace(' ', '_') + "_Quanity",
+        //            Content = item.CurrentRecipeNumPerCraft()/*quanity*/.ToString(),
+        //            FontSize = 24,
+        //            Height = 45,
+        //            Width = 45,
+        //            Foreground = whiteText,
+        //            Background = null,
+        //            Margin = new Thickness(marginLeft, marginTop, 0, 0), /*marginRight, marginBottom*/
+        //            Padding = new Thickness(0, 0, 0, 0),
+        //            VerticalAlignment = VerticalAlignment.Top,
+        //            HorizontalAlignment = HorizontalAlignment.Left,
+        //            VerticalContentAlignment = VerticalAlignment.Bottom,
+        //            HorizontalContentAlignment = HorizontalAlignment.Right,
+        //        };
+        //        //b.Content = l;
+        //        parent.Children.Add(l);
+        //    }
+        //}
+
+        //public Label NewLabel(string name, string content, int fontSize,
+        //    double marginLeft, double marginTop, double marginRight, double marginBottom)
+        //{
+        //    return new Label()
+        //    {
+        //        Uid = name,
+        //        Name = name,
+        //        Content = content,
+        //        FontSize = fontSize,
+        //        Margin = new Thickness(marginLeft, marginTop, marginRight, marginBottom)
+        //    };
+        //}
+
+        //public void LabelEdit(int rowPos, string query, double newNum, double newNum2)
+        //{
+        //    Label l = (Label)SearchView(rowPos, query);
+
+        //    switch (query)
+        //    {
+        //        case "Operation_Num_":
+        //            l.Content = "x " + newNum;
+        //            break;
+        //        case "Item_Total_":
+        //            l.Content = "Total Items (Stacks): " + newNum + " (" + newNum2 + ")";
+        //            break;
+        //        case "Item_Remainder_":
+        //            l.Content = "Remaining/Unused Items: " + newNum;
+        //            break;
+        //        case "Item_Required_":
+        //            l.Content = "Required Items: " + newNum;
+        //            break;
+        //    }
+        //}
+
+        //public ComboBox NewComboBox(Item item)
+        //{
+        //    List<ComboBoxItem> cbi = new List<ComboBoxItem>();
+
+        //    foreach (Recipe r in item.Recipes)
+        //    {
+        //        StackPanel comboBoxItem = new StackPanel() { Orientation = Orientation.Horizontal };
+
+        //        comboBoxItem.Children.Add(new Label()
+        //        {
+        //            Content = item.Recipes.IndexOf(r) + " (" + r.TypeOfCrafting.ToString() + "): ",
+        //            Height = 26
+        //        });
+
+        //        foreach (string slot in r.ItemSlots)
+        //        {
+        //            IEnumerable<Item> itemSearch = ItemList.ItemSearch(fullItemList, slot);
+        //            if (itemSearch.Count() >= 1)
+        //            {
+        //                comboBoxItem.Children.Add(new Image()
+        //                {
+        //                    Source = new BitmapImage(new Uri(itemSearch.First().ImageUrl, UriKind.Relative)),
+        //                    Height = 15,
+        //                    Width = 15,
+        //                    Stretch = Stretch.Uniform
+        //                });
+        //            }
+        //        }
+
+        //        cbi.Add(new ComboBoxItem() { Content = comboBoxItem });
+        //    }
+
+        //    ComboBox recipeComboBox = new ComboBox()
+        //    {
+        //        Uid = "Recipe_List_" + item.Name.Replace(" ", "_"),
+        //        //Name = "Recipe_List_" + item.Name.Replace(" ", "_"),
+        //        Height = 30,
+        //        Width = 250,
+        //        ItemsSource = cbi,
+        //        SelectedIndex = item.SelectedRecipe,
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //        Margin = new Thickness(800, 10, 0, 0)
+        //    };
+        //    recipeComboBox.SelectionChanged += RecipeComboBox_SelectionChanged;
+
+        //    return recipeComboBox;
+        //}
+
+        //public Grid NewItemSlot(bool resultSlot, double marginLeft, double marginTop)
+        //{
+        //    double size;
+        //    double borderThickness = 2;
+
+        //    if (resultSlot)
+        //    {
+        //        size = 61;
+        //    }
+        //    else
+        //    {
+        //        size = 49;
+        //    }
+
+        //    Grid itemSlotGrid = new Grid()
+        //    {
+        //        Width = size,
+        //        Height = size,
+        //        Background = itemSlotBackground,
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //        Margin = new Thickness(marginLeft, marginTop, 0, 0),
+        //    };
+
+        //    Border borderTopLeft = new Border()
+        //    {
+        //        Width = size - borderThickness,
+        //        Height = size - borderThickness,
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        //Background = itemSlotBackground,
+        //        BorderThickness = new Thickness(borderThickness, borderThickness, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border borderBottomRight = new Border()
+        //    {
+        //        Width = size - borderThickness,
+        //        Height = size - borderThickness,
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        BorderThickness = new Thickness(0, 0, borderThickness, borderThickness),
+        //        VerticalAlignment = VerticalAlignment.Bottom,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    itemSlotGrid.Children.Add(borderTopLeft);
+        //    itemSlotGrid.Children.Add(borderBottomRight);
+
+        //    return itemSlotGrid;
+        //}
+
+        //public Grid NewUIElement(int imageID, double marginLeft, double marginTop)
+        //{
+        //    double[] widths = new double[] { 48, 45 };
+        //    double[] heights = new double[] { 39, 45 };
+        //    string[] uiElementLocation = new string[] {
+        //        "../../Images/Crafting UI/Grid_layout_Furnace_Progress_(in-active).png",
+        //        "../../Images/Crafting UI/Grid_layout_Fire_(in-active).png"
+        //    };
+
+        //    Grid uiElement = new Grid()
+        //    {
+        //        Width = widths[imageID],
+        //        Height = heights[imageID],
+        //        Margin = new Thickness(marginLeft, marginTop, 0, 0),
+        //        Background = new ImageBrush(new BitmapImage(new Uri(uiElementLocation[imageID], UriKind.Relative))) { Stretch = Stretch.Uniform },
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    return uiElement;
+        //}
+
+        //public Grid NewBrewingConnections()
+        //{
+        //    Grid brewingTubes = new Grid()
+        //    {
+        //        //Background = itemButtonBorderRed,
+        //        Width = 83,
+        //        Height = 73,
+        //        Margin = new Thickness(72, 69, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeLeftTop1 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 2, 0),
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        Background = itemSlotBackground,
+        //        Height = 59,
+        //        Width = 8,
+        //        Margin = new Thickness(21, 0, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeLeftTop2 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(2, 0, 0, 0),
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        Height = 51,
+        //        //Width = 8,
+        //        Margin = new Thickness(21, 2, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeLeftBottom1 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 0, 2),
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        Background = itemSlotBackground,
+        //        Height = 8,
+        //        Width = 27,
+        //        Margin = new Thickness(0, 51, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeLeftBottom2 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 2, 0, 0),
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        //Height = 8,
+        //        Width = 21,
+        //        Margin = new Thickness(2, 51, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeCentre1 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 2, 0),
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        Background = itemSlotBackground,
+        //        Height = 71,
+        //        Width = 8,
+        //        Margin = new Thickness(31, 0, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border tubeCentre2 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(2, 0, 0, 0),
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        Background = itemSlotBackground,
+        //        Height = 71,
+        //        Width = 6,
+        //        Margin = new Thickness(31, 2, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Grid tubeRightCorner = new Grid()
+        //    {
+        //        Width = 8,
+        //        Height = 8,
+        //        Background = itemSlotBackground,
+        //        Margin = new Thickness(0, 51, 21, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    Border tubeRightTop1 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 2, 0),
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        Background = itemSlotBackground,
+        //        Height = 51,
+        //        Width = 8,
+        //        Margin = new Thickness(0, 0, 21, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    Border tubeRightTop2 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(2, 0, 0, 0),
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        Height = 55,
+        //        Width = 8,
+        //        Margin = new Thickness(0, 2, 21, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    Border tubeRightBottom1 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 2, 0, 0),
+        //        BorderBrush = itemSlotBorderTopLeft,
+        //        Background = itemSlotBackground,
+        //        Height = 8,
+        //        Width = 23,
+        //        Margin = new Thickness(0, 51, 0, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    Border tubeRightBottom2 = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 0, 2),
+        //        BorderBrush = itemSlotBorderBottomRight,
+        //        //Background = itemSlotBackground,
+        //        Height = 8,
+        //        Width = 25,
+        //        Margin = new Thickness(0, 51, 2, 0),
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Right,
+        //    };
+
+        //    brewingTubes.Children.Add(tubeLeftTop1);
+        //    brewingTubes.Children.Add(tubeLeftTop2);
+        //    brewingTubes.Children.Add(tubeLeftBottom1);
+        //    brewingTubes.Children.Add(tubeLeftBottom2);
+        //    brewingTubes.Children.Add(tubeCentre1);
+        //    brewingTubes.Children.Add(tubeCentre2);
+        //    brewingTubes.Children.Add(tubeRightCorner);
+        //    brewingTubes.Children.Add(tubeRightTop1);
+        //    brewingTubes.Children.Add(tubeRightTop2);
+        //    brewingTubes.Children.Add(tubeRightBottom1);
+        //    brewingTubes.Children.Add(tubeRightBottom2);
+
+        //    return brewingTubes;
+        //}
+
+        //public Grid NewCraftingUI(Recipe.CraftingType craftingType)
+        //{
+        //    //string[] craftUILocation = new string[] {"", "../../Images/Crafting UI/Crafting3x3.png", "../../Images/Crafting UI/Furnace.png"}; 
+        //    //Grid craftingArrow = NewUIElement(0, 195, 99); 
+        //    int craftInt = (int)craftingType;
+
+        //    Grid backgroundGrid = new Grid()
+        //    {
+        //        Width = 362,
+        //        Margin = new Thickness(10, 10, 0, 10),
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //    };
+
+        //    Border borderTopLeft = new Border()
+        //    {
+        //        BorderThickness = new Thickness(2, 2, 0, 0),
+        //        BorderBrush = BackUIBorderTopLeft,
+        //        Background = BackUIBackground,
+        //        CornerRadius = new CornerRadius(8, 8, 8, 8)
+        //    };
+
+        //    Border borderBottomRight = new Border()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 2, 2),
+        //        BorderBrush = BackUIBorderBottomRight,
+        //        CornerRadius = new CornerRadius(8, 8, 8, 8)
+        //    };
+
+        //    backgroundGrid.Children.Add(borderTopLeft);
+        //    backgroundGrid.Children.Add(borderBottomRight);
+
+        //    Label nameLabel = new Label()
+        //    {
+        //        FontSize = 16,
+        //        Margin = new Thickness(5, 5, 0, 0),
+        //    };
+
+        //    switch (craftInt)
+        //    {
+        //        case 0:
+        //            backgroundGrid.Children.Add(NewItemSlot(true, 58, 85));
+        //            break;
+
+        //        case 1:
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 15, 42));    //Left Top Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 42));    //Centre Top Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 113, 42));   //Right Top Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 15, 91));    //Left Middle Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 91));    //Centre Middle Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 113, 91));   //Right Middle Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 15, 140));   //Left Bottom Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 140));   //Centre Bottom Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 113, 140));  //Right Bottom Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(true, 289, 85));    //Result Slot
+
+        //            backgroundGrid.Children.Add(NewUIElement(0, 195, 99));      //Arrow
+        //            nameLabel.Content = "Crafting";
+        //            backgroundGrid.Children.Add(nameLabel);
+        //            break;
+
+        //        case 2:
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 42));    //Item Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 140));   //Fuel Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(true, 193, 85));    //Result Slot
+
+        //            backgroundGrid.Children.Add(NewUIElement(1, 65, 92));       //Flame Icon
+        //            backgroundGrid.Children.Add(NewUIElement(0, 129, 99));      //Arrow
+        //            nameLabel.Content = "Smelting";
+        //            backgroundGrid.Children.Add(nameLabel);
+        //            break;
+
+        //        case 3:
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 15, 42));    //Fuel Slot
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 89, 22));    //Item Slot     //64, 42
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 25, 116));   //Bottle Slot 1 //15, 140
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 89, 140));   //Bottle Slot 2 //64, 140
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 153, 116));  //Bottle Slot 3 //113, 140
+        //            backgroundGrid.Children.Add(NewItemSlot(true, 289, 85));    //Result Slot
+
+        //            backgroundGrid.Children.Add(NewUIElement(0, 225, 99));      //Arrow
+        //            nameLabel.Content = "Brewing";
+        //            backgroundGrid.Children.Add(nameLabel);
+
+        //            backgroundGrid.Children.Add(NewBrewingConnections());
+        //            break;
+
+        //        case 4:
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 15, 91));
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 64, 91));
+        //            backgroundGrid.Children.Add(NewItemSlot(false, 113, 91));
+        //            backgroundGrid.Children.Add(NewItemSlot(true, 289, 85));    //Result Slot
+        //            backgroundGrid.Children.Add(NewUIElement(0, 195, 99));      //Arrow
+        //            break;
+
+        //        default:
+        //            break;
+        //    }
+
+        //    return backgroundGrid;
+        //}
+
+        //public TextBox NewSpinnerTextBox(Item item)
+        //{
+        //    return new TextBox()
+        //    {
+        //        Name = "Spinner_Display_" + item.Name.Replace(' ', '_'),
+        //        Uid = "Spinner_Display_" + item.Name.Replace(' ', '_'),
+        //        Text = "0",
+        //        Height = 20,
+        //        Width = 50,
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //        VerticalContentAlignment = VerticalAlignment.Center,
+        //        HorizontalContentAlignment = HorizontalAlignment.Right,
+        //        Margin = new Thickness(700, 35, 0, 0)
+        //    };
+        //}
+
+        //public Button NewSpinnerButton(Item item, bool upButton)
+        //{
+        //    Button b = new Button()
+        //    {
+        //        Height = 20,
+        //        Width = 50,
+        //        VerticalAlignment = VerticalAlignment.Top,
+        //        HorizontalAlignment = HorizontalAlignment.Left,
+        //        VerticalContentAlignment = VerticalAlignment.Center,
+        //        HorizontalContentAlignment = HorizontalAlignment.Center,
+        //        ClickMode = ClickMode.Release
+        //    };
+
+        //    b.Click += SpinnerButton_Click;
+
+        //    if (upButton)
+        //    {
+        //        b.Name = "Spinner_UP_" + item.Name.Replace(' ', '_');
+        //        b.Content = "UP";
+        //        b.Margin = new Thickness(700, 15, 0, 0);
+        //    }
+        //    else
+        //    {
+        //        b.Name = "Spinner_DOWN_" + item.Name.Replace(' ', '_');
+        //        b.Content = "DOWN";
+        //        b.Margin = new Thickness(700, 55, 0, 0);
+        //    }
+
+        //    return b;
+        //}
+
+        //public TextBlock NewFlavourTextBlock(string flavourText, Item.TextColor textColorNum)
+        //{
+        //    SolidColorBrush textColour = whiteText;
+        //    Color shadowColour = whiteTextShadow;
+
+        //    switch (textColorNum)
+        //    {
+        //        case Item.TextColor.White:
+        //            //textColour = whiteText;
+        //            //shadowColour = whiteTextShadow;
+        //            break;
+        //        case Item.TextColor.Grey:
+        //            textColour = greyText;
+        //            shadowColour = greyTextShadow;
+        //            break;
+        //        case Item.TextColor.Blue:
+        //            textColour = blueText;
+        //            shadowColour = blueTextShadow;
+        //            break;
+        //        case Item.TextColor.Red:
+        //            textColour = redText;
+        //            shadowColour = redTextShadow;
+        //            break;
+        //    }
+
+        //    return new TextBlock()
+        //    {
+        //        MaxWidth = 200,
+        //        TextWrapping = TextWrapping.WrapWithOverflow,
+        //        Text = flavourText,   //"Unused at the current time",
+        //        Foreground = textColour,
+        //        Effect = new DropShadowEffect()
+        //        {
+        //            ShadowDepth = 3,
+        //            Direction = 315,
+        //            Color = shadowColour,
+        //            Opacity = 0.35,
+        //            BlurRadius = 0.0
+        //        }
+        //    };
+
+        //    /*sp.Children.Add(new TextBlock() ////////////////////////////////////////////////////////////////////////////////
+        //    { 
+        //        MaxWidth = 200, 
+        //        TextWrapping = TextWrapping.WrapWithOverflow, 
+        //        Text = item.FlavourText1,//"Unused at the current time",
+        //        Foreground = greyText,
+        //        Effect = new DropShadowEffect()
+        //        {
+        //            ShadowDepth = 3,
+        //            Direction = 315,
+        //            Color = greyTextShadow,
+        //            Opacity = 0.35,
+        //            BlurRadius = 0.0
+        //        }
+        //    });*/
+        //}
+        /**/
+
+
+        //Utility Methods
+        public void AddingGridChildern(Grid parent, UIElement child, int column, int row)
+        {
+            Grid.SetColumn(child, column);
+            Grid.SetRow(child, row);
+            parent.Children.Add(child);
+        }
+
+        public void ClearList() //bool fCSClear, bool cSAndICClear, bool viewClear
+        {
+            findCraftingStack.Clear();
+            craftingStack.Clear();
+            craftingItemsCount.Clear();
+            //if (fCSClear) { } if (cSAndICClear) { } if (viewClear) { }
+        }
+
+        public void ClearView()
+        {
+            Crafting_List.Children.Clear();
+            Crafting_List.RowDefinitions.Clear();
+        }
+
+        public UIElement SearchView(int rowPos/*, string query*/)
+        {
+            return Crafting_List.Children
+                .Cast<UIElement>()
+                .Where(i => Grid.GetRow(i) == rowPos /*&& i.Uid.Contains(query)*/)
+                .First<UIElement>();
+        }
+
+        public void ReCalculate(int rowPos)/*, int[] itemsCount*/
+        {
+            ((CraftingPanel)SearchView(rowPos)).SetValue(); //Could use a while loop have instead
+
+            if (++rowPos < craftingItemsCount.Count())
+            {
+                ReCalculate(rowPos);/*view,*//*, itemsCount*/
+            }
+        }
+
+        //Item item = craftingStack.ElementAt(rowPos);
+        //TextBox spinnerHolder = (TextBox)SearchView(rowPos, "Spinner_Display_");/*view,*/
+
+        //if (item.CurrentRecipeCraftingType() != Recipe.CraftingType.No_Recipe) //item.TypeOfCrafting != Item.CraftingType.No_Recipe
+        //{
+        //int itemsNum = itemsCount[rowPos] /*+ int.Parse(spinnerHolder.Text)*/;
+        //double amountOfCrafts = Math.Ceiling(itemsNum / (item.CurrentRecipeNumPerCraft() * 1.0));/*item.NumPerCraft*/
+        //double totalFromCraft = item.CurrentRecipeNumPerCraft() * amountOfCrafts;/*item.NumPerCraft*/
+        //double totalStackFromCraft = totalFromCraft / item.StackSize;
+        //double remainderFromCraft = totalFromCraft - itemsNum;
+
+        //LabelEdit(rowPos, "Operation_Num_", amountOfCrafts, 0);
+        //LabelEdit(rowPos, "Item_Total_", totalFromCraft, totalStackFromCraft);
+        //if (item.CurrentRecipeCraftingType() != Recipe.CraftingType.Smelting)
+        //{
+        //LabelEdit(rowPos, "Item_Remainder_", remainderFromCraft, 0);
+        //}
+        //LabelEdit(rowPos, "Item_Required_", itemsCount[rowPos], 0);
+
+        //foreach (string name in item.CurrentRecipeItemSlots())/*item.Recipe*/
+        //{
+        //    IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(MainWindow.fullItemList, name);
+
+        //    if (craftingItemQuery.Count() != 0)
+        //    {
+        //        for (int i = 0; i < amountOfCrafts; i++)
+        //        {
+        //            itemsCount[craftingStack.IndexOf(craftingItemQuery.First())]++;
+        //        }
+        //    }
+        //}
+        //}
+        //else
+        //{
+        //int itemsNum = itemsCount[rowPos] /*+ int.Parse(spinnerHolder.Text)*/;
+
+        //double totalStackFromCraft = itemsNum / (item.StackSize * 1.0);
+
+        //LabelEdit(rowPos, "Operation_Num_", itemsNum, 0);
+        //LabelEdit(rowPos, "Item_Total_", itemsNum, totalStackFromCraft);
+        //LabelEdit(rowPos, "Item_Required_", itemsCount[rowPos], 0);
+        //}
+    }
+}

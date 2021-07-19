@@ -1,0 +1,771 @@
+﻿//Crafting View Elements Methods
+        public void RunTheStuff()
+        {
+            List<Item> craftingStackPreChange = new List<Item>(craftingStack);
+
+            FindAllCraftingItems();
+
+            for (int i = 0; i < craftingStack.Count(); i++)
+            {
+                craftingItemsCount.Add(0);
+            }
+
+            foreach (Item j in craftingStackPreChange)
+            {
+                craftingItemsCount[craftingStack.IndexOf(j)]++;
+            }
+
+            DisplayCraftingReceipe(0, Crafting_List);
+        }
+
+        public void FindAllCraftingItems()
+        {
+            Item frontItem = findCraftingStack.First();
+
+            foreach (string name in frontItem.CurrentRecipeItemSlots())
+            {
+                IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, name); //Check item 
+
+                if (craftingItemQuery.Count() != 0)
+                {
+                    Item craftingItem = craftingItemQuery.First();
+                    /* Loop Detector */
+                    bool loopDetected = false;
+                    foreach (string s in craftingItem.CurrentRecipeItemSlots())
+                    {
+                        if (s.Equals(frontItem.Name))
+                        {
+                            loopDetected = true;
+                        }
+                    }
+
+                    if (loopDetected)
+                    {
+                        craftingItem.SelectedRecipe++;
+                        if (craftingItem.SelectedRecipe >= craftingItem.Recipes.Count())
+                        {
+                            craftingItem.SelectedRecipe = 0;
+                        }
+                    }
+                    ////
+                    if (!craftingStack.Contains(craftingItem))
+                    {
+                        craftingStack.Add(craftingItem);
+                    }
+                    else
+                    {
+                        craftingStack.Remove(craftingItem);
+                        craftingStack.Add(craftingItem);
+                    }
+
+                    if (!findCraftingStack.Contains(craftingItem))
+                    {
+                        findCraftingStack.Add(craftingItem);
+                    }
+                    else
+                    {
+                        findCraftingStack.Remove(craftingItem);
+                        findCraftingStack.Add(craftingItem);
+                    }
+                }
+            }
+
+            if (findCraftingStack.Count() > 1)
+            {
+                findCraftingStack.Remove(frontItem);
+                FindAllCraftingItems();
+            }
+            else
+            {
+                findCraftingStack.Remove(frontItem);
+            }
+        }
+
+        public void DisplayCraftingReceipe(int step, Grid craftingList) 
+        {
+            craftingList.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+
+            switch (craftingStack[step].CurrentRecipeCraftingType()) 
+            {
+                case Recipe.CraftingType.Crafting_Table:
+                    DisplayCraftingTable(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Smelting:
+                    DisplaySmelting(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Brewing:
+                    DisplayBrewing(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Other:
+                    DisplayOther(step, craftingList);
+                    break;
+                default:
+                    DisplayNoCrafting(step, craftingList);
+                    break;
+            }
+
+            ++step;
+
+            if (step < craftingStack.Count())
+            {
+                DisplayCraftingReceipe(step, craftingList);/*craftingStack.ElementAt(step),*/ 
+            }
+        }
+
+        public void DisplayCraftingTable(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] ctSlotMargins = new double[9, 2]
+            {
+                { 17, 44 },     //Left Top Slot
+                { 66, 44 },     //Centre Top Slot
+                { 115, 44 },    //Right Top Slot
+                { 17, 93 },     //Left Middle Slot
+                { 66, 93 },     //Centre Middle Slot
+                { 115, 93 },    //Right Middle Slot
+                { 17, 142 },    //Left Bottom Slot
+                { 66, 142 },    //Centre Bottom Slot
+                { 115, 142 }    //Right Bottom Slot
+            };
+            int craftingPos = 0;
+
+            //Displays the Crafting Table UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            //Displays the items used in the crafting reciepe
+            foreach (string name in currentItem.CurrentRecipeItemSlots())
+            {
+                IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, name);
+
+                if (craftingItemQuery.Count() != 0)
+                {
+                    ItemButtonCreator(craftingItemQuery.First(),/*.Name, craftingItemQuery.First().ImageUrl,*/ 
+                        ctSlotMargins[craftingPos, 0], ctSlotMargins[craftingPos, 1], /*ctSlotMargins[craftingPos, 2], 
+                        ctSlotMargins[craftingPos, 3],*/ false, false, 0, 0, false, /*0,*/ craftingGrid);
+
+                    for (int j = 0; j < amountOfCrafts; j++)
+                    {
+                        craftingItemsCount[craftingStack.IndexOf(craftingItemQuery.First())]++;
+                    }
+                }
+
+                craftingPos++;
+            }
+        }
+
+        public void DisplaySmelting(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            //IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[0]);
+            Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[0]).First();
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+
+            //Displays the Furnace UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 201, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //240, 89
+
+            //Displays the item used in the crafting reciepe
+            ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*//*.First()*//*.First()*/ 66, 44, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //77, 40
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int j = 0; j < amountOfCrafts; j++)
+            {
+                craftingItemsCount[craftingStack.IndexOf(craftingItemQuery/*.First()*/)]++;
+            }
+        }
+
+        public void DisplayBrewing(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] brewingSlotMargins = new double[4, 2]
+            {
+                { 91, 24 },     //Item Slot         //66, 44
+                { 27, 118 },    //Bottle Slot 1     //17, 142
+                { 91, 142 },    //Bottle Slot 2     //66, 142
+                { 155, 118 }    //Bottle Slot 3     //115, 142
+            };
+
+            //Displays the Furnace UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //240, 89
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int i = 0; i < 4; i++)
+            {
+                Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[i]).First();
+
+                //Displays the items used in the crafting reciepe
+                ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*/ brewingSlotMargins[i, 0], brewingSlotMargins[i, 1], /*0, 0,*/ false, false, 0, 0, false, /*0,*/ craftingGrid); //240, 89
+
+                for (int j = 0; j < amountOfCrafts; j++)
+                {
+                    craftingItemsCount[craftingStack.IndexOf(craftingItemQuery)]++;
+                }
+            }
+        }
+
+        public void DisplayOther(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] otherSlotMargins = new double[2, 2]
+            {
+                { 17, 93 },     //Left Middle Slot
+                //{ 66, 93 },     //Centre Middle Slot
+                { 115, 93 },    //Right Middle Slot
+            };
+
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[i]).First();
+
+                //Displays the items used in the crafting reciepe
+                ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*/ otherSlotMargins[i, 0], otherSlotMargins[i, 1], /*0, 0,*/ false, false, 0, 0, false, /*0,*/ craftingGrid); //240, 89
+
+                for (int j = 0; j < amountOfCrafts /*&& i != 1*/; j++)
+                {
+                    craftingItemsCount[craftingStack.IndexOf(craftingItemQuery)]++;
+                }
+            }
+        }
+
+        public void DisplayNoCrafting(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            double totalStackFromCraft = craftingItemsCount[step] / (currentItem.StackSize * 1.0);
+
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + craftingItemsCount[step].ToString(), 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + craftingItemsCount[step] + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);//,800, 10, 0, 0
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            /*Dont think this needs to be true*/
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 66, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);/*currentItem.NumPerCraft*/
+        }
+
+        /*currentItem.Name, currentItem.ImageUrl,*//*0, 0,*//*currentItem.CurrentRecipeNumPerCraft(),*/
+        //Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[i]).First();
+        /*.Name, craftingItemQuery.First().ImageUrl,*//*ctSlotMargins[craftingPos, 2],ctSlotMargins[craftingPos, 3],*//*0,*/
+        //craftingPos++;
+        //int craftingPos = 0;
+        //if (item.CurrentRecipeCraftingType() != Recipe.CraftingType.No_Recipe)
+        //foreach (string name in currentItem.CurrentRecipeItemSlots())
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+public void DisplayCraftingTable(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] ctSlotMargins = new double[9, 2]
+            {
+                { 17, 44 },     //Left Top Slot
+                { 66, 44 },     //Centre Top Slot
+                { 115, 44 },    //Right Top Slot
+                { 17, 93 },     //Left Middle Slot
+                { 66, 93 },     //Centre Middle Slot
+                { 115, 93 },    //Right Middle Slot
+                { 17, 142 },    //Left Bottom Slot
+                { 66, 142 },    //Centre Bottom Slot
+                { 115, 142 }    //Right Bottom Slot
+            };
+            int craftingPos = 0;
+
+            //Displays the Crafting Table UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            //Displays the items used in the crafting reciepe
+            foreach (string name in currentItem.CurrentRecipeItemSlots())
+            {
+                IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, name);
+
+                if (craftingItemQuery.Count() != 0)
+                {
+                    ItemButtonCreator(craftingItemQuery.First(),/*.Name, craftingItemQuery.First().ImageUrl,*/ 
+                        ctSlotMargins[craftingPos, 0], ctSlotMargins[craftingPos, 1], /*ctSlotMargins[craftingPos, 2], 
+                        ctSlotMargins[craftingPos, 3],*/ false, false, 0, 0, false, /*0,*/ craftingGrid);
+
+                    for (int j = 0; j < amountOfCrafts; j++)
+                    {
+                        craftingItemsCount[craftingStack.IndexOf(craftingItemQuery.First())]++;
+                    }
+                }
+
+                craftingPos++;
+            }
+        }
+
+        public void DisplaySmelting(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            //IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[0]);
+            Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[0]).First();
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+
+            //Displays the Furnace UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 201, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //240, 89
+
+            //Displays the item used in the crafting reciepe
+            ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*//*.First()*//*.First()*/ 66, 44, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //77, 40
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int j = 0; j < amountOfCrafts; j++)
+            {
+                craftingItemsCount[craftingStack.IndexOf(craftingItemQuery/*.First()*/)]++;
+            }
+        }
+
+        public void DisplayBrewing(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] brewingSlotMargins = new double[4, 2]
+            {
+                { 91, 24 },     //Item Slot         //66, 44
+                { 27, 118 },    //Bottle Slot 1     //17, 142
+                { 91, 142 },    //Bottle Slot 2     //66, 142
+                { 155, 118 }    //Bottle Slot 3     //115, 142
+            };
+
+            //Displays the Furnace UI
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid); //240, 89
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int i = 0; i < 4; i++)
+            {
+                Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[i]).First();
+
+                //Displays the items used in the crafting reciepe
+                ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*/ brewingSlotMargins[i, 0], brewingSlotMargins[i, 1], /*0, 0,*/ false, false, 0, 0, false, /*0,*/ craftingGrid); //240, 89
+
+                for (int j = 0; j < amountOfCrafts; j++)
+                {
+                    craftingItemsCount[craftingStack.IndexOf(craftingItemQuery)]++;
+                }
+            }
+        }
+
+        public void DisplayOther(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+
+            double amountOfCrafts = Math.Ceiling(craftingItemsCount.ElementAt(step) / (currentItem.CurrentRecipeNumPerCraft() * 1.0));
+            double totalFromCraft = currentItem.CurrentRecipeNumPerCraft() * amountOfCrafts;
+            double totalStackFromCraft = totalFromCraft / currentItem.StackSize;
+            double remainderFromCraft = totalFromCraft - craftingItemsCount.ElementAt(step);
+
+            double[,] otherSlotMargins = new double[2, 2]
+            {
+                { 17, 93 },     //Left Middle Slot
+                //{ 66, 93 },     //Centre Middle Slot
+                { 115, 93 },    //Right Middle Slot
+            };
+
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            //Displays crafted items
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 297, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);
+
+            //Displays the number of times the crafting operation is to be done
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + amountOfCrafts, 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items not used (In general)
+            Label itemRemainder = NewLabel("Item_Remainder_", "Remaining/Unused Items: " + remainderFromCraft, 12, 382, 30, 0, 0);
+            AddingGridChildern(craftingList, itemRemainder, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Item craftingItemQuery = ItemList.ItemSearch(fullItemList, currentItem.CurrentRecipeItemSlots()[i]).First();
+
+                //Displays the items used in the crafting reciepe
+                ItemButtonCreator(craftingItemQuery,/*.Name, craftingItemQuery.ImageUrl,*/ otherSlotMargins[i, 0], otherSlotMargins[i, 1], /*0, 0,*/ false, false, 0, 0, false, /*0,*/ craftingGrid); //240, 89
+
+                for (int j = 0; j < amountOfCrafts /*&& i != 1*/; j++)
+                {
+                    craftingItemsCount[craftingStack.IndexOf(craftingItemQuery)]++;
+                }
+            }
+        }
+
+        public void DisplayNoCrafting(int step, Grid craftingList) 
+        {
+            Item currentItem = craftingStack.ElementAt(step);
+            double totalStackFromCraft = craftingItemsCount[step] / (currentItem.StackSize * 1.0);
+
+            Grid craftingGrid = NewCraftingUI(currentItem.CurrentRecipeCraftingType());
+            AddingGridChildern(craftingList, craftingGrid, 0, step);
+
+            Label numOfOperation = NewLabel("Operation_Num_", "x " + craftingItemsCount[step].ToString(), 48, 382, 90, 0, 0);
+            AddingGridChildern(craftingList, numOfOperation, 0, step);
+
+            //Displays the number of items made
+            Label itemTotal = NewLabel("Item_Total_", "Total Items (Stacks): " + craftingItemsCount[step] + " (" + totalStackFromCraft + ")", 12, 382, 10, 0, 0);
+            AddingGridChildern(craftingList, itemTotal, 0, step);
+
+            //Displays the number of items required
+            Label itemRequired = NewLabel("Item_Required_", "Required Items: " + craftingItemsCount.ElementAt(step), 12, 382, 50, 0, 0);
+            AddingGridChildern(craftingList, itemRequired, 0, step);
+
+            //Displays list of crafting recipe
+            ComboBox recipeBox = NewComboBox(currentItem);//,800, 10, 0, 0
+            AddingGridChildern(craftingList, recipeBox, 0, step);
+
+            //Spinner
+            Label itemExtra = NewLabel("Item_Extra_", "Extra Items: ", 12, 625, 30, 0, 0);
+            AddingGridChildern(craftingList, itemExtra, 0, step);
+            TextBox spinnerNumDisplay = NewSpinnerTextBox(currentItem);
+            //spinnerNumDisplay.TextChanged += SpinnerTextBox_TextChanged;
+            AddingGridChildern(craftingList, spinnerNumDisplay, 0, step);
+            Button spinnerNumUp = NewSpinnerButton(currentItem, true);
+            AddingGridChildern(craftingList, spinnerNumUp, 0, step);
+            Button spinnerNumDown = NewSpinnerButton(currentItem, false);
+            AddingGridChildern(craftingList, spinnerNumDown, 0, step);
+
+            /*Dont think this needs to be true*/
+            ItemButtonCreator(currentItem,/*currentItem.Name, currentItem.ImageUrl,*/ 66, 93, /*0, 0,*/ false, false, 0, 0, true, /*currentItem.CurrentRecipeNumPerCraft(),*/ craftingGrid);/*currentItem.NumPerCraft*/
+        }
+
+        public void DisplayCraftingReceipe(int step, Grid craftingList) 
+        {
+            
+
+            /*switch (craftingStack[step].CurrentRecipeCraftingType()) 
+            {
+                case Recipe.CraftingType.Crafting_Table:
+                    DisplayCraftingTable(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Smelting:
+                    DisplaySmelting(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Brewing:
+                    DisplayBrewing(step, craftingList);
+                    break;
+                case Recipe.CraftingType.Other:
+                    DisplayOther(step, craftingList);
+                    break;
+                default:
+                    DisplayNoCrafting(step, craftingList);
+                    break;
+            }*/
+
+            DisplayCraft(step, craftingList);
+
+            
+        }

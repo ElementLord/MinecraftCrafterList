@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="MinecraftCrafterList.CustomUserControl.CraftingPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftCrafterList.CustomUserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="220" Width="1056.491">
+    <Grid x:Name="Panel">
+        <local:UIBackground Margin="10,10,0,10" HorizontalAlignment="Left" Width="362"/>
+        <Label x:Name="ItemTotal" Margin="377,10,0,0" Height="26" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12" Content="Total Items (Stacks): &lt;Error&gt; (&lt;Error&gt;)"/>
+        <Label x:Name="ItemRemainder" Margin="377,36,0,0" Height="26" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12" Content="Remaining/Unused Items: &lt;Error&gt;"/>
+        <Label x:Name="ItemRequired" Margin="377,62,0,0" Height="26" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12" Content="Required Items: &lt;Error&gt;"/>
+        <Label x:Name="ItemExtra" Margin="602,36,0,0" Height="26" Width="72" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12" Content="Extra Items:"/>
+        <Label x:Name="NumOfOperation" Margin="377,88,0,0" Height="122" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="48" Content="x &lt;Error&gt;" />
+        <local:CustomSpinner x:Name="Spinner" Margin="674,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/><!--CraftingTextChanged="True"-->
+        <ComboBox x:Name="RecipeComboBox" Margin="764,15,0,0" Height="30" Width="283" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="RecipeComboBox_SelectionChanged"/>
+    </Grid>
+</UserControl>

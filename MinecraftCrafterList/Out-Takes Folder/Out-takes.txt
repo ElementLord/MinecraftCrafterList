@@ -1,0 +1,391 @@
+﻿/*----MainWindows.xaml.cs----*/
+//Grid craftingGrid = new Grid();
+//ImageBrush itemImageBrush2 = new ImageBrush(new BitmapImage(new Uri("../../Crafting3x3.png", UriKind.Relative))) { Stretch = Stretch.Uniform };
+            
+//craftingGrid.Width = 362;
+//craftingGrid.Margin = new Thickness(10, 10, 0, 10);
+//craftingGrid.Background = itemImageBrush2;
+//craftingGrid.HorizontalAlignment = HorizontalAlignment.Left;
+//Grid.SetColumn(craftingGrid, 0);
+//Grid.SetRow(craftingGrid, 0);
+//Crafting_List.Children.Add(craftingGrid);
+
+//ItemButtonCreator(resultItem.Name.Replace(' ', '_'), resultItem.Name, resultItem.ImageUrl, 297, 93, 0, 0, false, false, 0, 0, craftingGrid);
+
+//double[,] cSlotMargins = new double[9, 4] 
+//{ 
+//    { 11, 38, 0, 0 },
+//    { 66, 38, 0, 0 },
+//    { 120, 38, 0, 0 },
+//    { 11, 93, 0, 0 },
+//    { 66, 93, 0, 0 },
+//    { 120, 93, 0, 0 },
+//    { 11, 148, 0, 0 },
+//    { 66, 148, 0, 0 },
+//    { 120, 148, 0, 0 }
+//};
+//int craftingPos = 0;
+
+//foreach(string name in resultItem.Receipe)
+//{
+//    IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(fullItemList, name);
+                
+//    if (craftingItemQuery.Count() != 0)
+//    {
+//        ItemButtonCreator(craftingItemQuery.First().Name.Replace(' ', '_'), craftingItemQuery.First().Name, 
+//            craftingItemQuery.First().ImageUrl, cSlotMargins[craftingPos,0], cSlotMargins[craftingPos, 1], cSlotMargins[craftingPos, 2], 
+//            cSlotMargins[craftingPos, 3], false, false, 0, 0, craftingGrid);
+
+//        if (!craftingStack.Contains(craftingItemQuery.First()))
+//        {
+//            craftingStack.Push(craftingItemQuery.First());
+//        }
+//    }
+
+//    craftingPos++;
+//}
+
+//Crafting_List.RowDefinitions.Add(newRow2);
+
+
+
+//ImageBrush itemImageBrush2 = 
+//RowDefinition newRow2 = ;
+
+/*i.Name.Replace(' ', '_'),*/
+/*i.Name.Replace(' ', '_'),*/ 
+/*craftingItemQuery.First().Name.Replace(' ', '_'),*/
+
+
+/* string tooltip,*/
+/*tooltip*/
+//ImageBrush itemImageBrush = ;
+//SolidColorBrush borderBrush = ;
+
+
+
+//if (!craftingStack.Contains(craftingItemQuery.First()))
+//{
+//    craftingStack.Add(craftingItemQuery.First());
+//}
+//else
+//{
+//    craftingStack.Remove(craftingItemQuery.First());
+//    craftingStack.Add(craftingItemQuery.First());
+//}
+
+//Crafting_List.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+//DisplayCraftingTable(resultItem, 0, Crafting_List);
+
+
+/*----MainWindows.xaml----*/
+
+<!--<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>
+<RowDefinition Height="45"/>-->
+
+<!--<Button Grid.Column="0" Grid.Row="0" Content="" Width="45" Height="45" ToolTip="Acaia Button">
+    <Button.BorderBrush>
+        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+    </Button.BorderBrush>
+    <Button.Background>
+        <ImageBrush ImageSource="45px-Acacia_Button.png" Stretch="None"/>
+    </Button.Background>
+</Button>
+<Button Grid.Column="1" Grid.Row="0" Content="" Width="45" Height="45">
+    <Button.BorderBrush>
+        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+    </Button.BorderBrush>
+    <Button.Background>
+        <ImageBrush ImageSource="45px-Acacia_Door.png"/>
+    </Button.Background>
+</Button>-->
+
+<!--<RowDefinition Height="220"/>-->
+
+<!--<Grid Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="10,10,0,10" Width="362">
+    <Grid.Background>
+        <ImageBrush ImageSource="Crafting3x3.png" Stretch="Uniform"/>
+    </Grid.Background>
+    <Button Name="slot_1" Background="Black" Margin="11,38,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_2" Background="Black" Margin="66,38,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_3" Background="Black" Margin="120,38,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_4" Background="Black" Margin="11,93,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_5" Background="Black" Margin="66,93,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_6" Background="Black" Margin="120,93,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_7" Background="Black" Margin="11,148,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_8" Background="Black" Margin="66,148,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_9" Background="Black" Margin="120,148,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+    <Button Name="slot_Result" Background="Black" Margin="297,93,0,0" HorizontalAlignment="Left" Width="45" Height="45" VerticalAlignment="Top"/>
+</Grid>-->
+<!--<Label Content="64" Margin="297,93,0,0" Background="{x:Null}" Height="45" Width="45" Padding="0" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="Black"/>-->
+
+
+
+
+
+//craftingList.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+//craftingList.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+//craftingList.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(220) });
+
+//if (craftingStack.Count() != 0)
+            //{
+            //    Item nextItem = craftingStack.First();
+            //    craftingStack.Remove(nextItem);
+            //    DisplayCraftingTable(nextItem, ++step, craftingList);
+            //}
+
+
+
+/*new Label()
+{
+    Uid = "Operation_Num_",
+    Content = "x " + amountOfCrafts,
+    FontSize = 48,
+    Margin = new Thickness(382, 90, 0, 0)
+};*/
+
+/*new Label()
+{
+    Uid = "Item_Total_",
+    Content = "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")",
+    FontSize = 12,
+    //FontWeight = FontWeights.Bold,
+    Margin = new Thickness(382, 10, 0, 0)
+};*/
+
+/*new Label()
+{
+    Uid = "Item_Remainder_",
+    Content = "Remaining/Unused Items: " + remainderFromCraft,
+    FontSize = 12,
+    Margin = new Thickness(382, 30, 0, 0)
+};*/
+
+/*new Label()
+{
+    Uid = "Item_Required_",
+    Content = "Required Items: " + craftingItemsCount.ElementAt(step),
+    FontSize = 12,
+    Margin = new Thickness(382, 50, 0, 0)
+};*/
+
+/*new Label()
+{
+    Content = "Extra Items: ",
+    FontSize = 12,
+    Margin = new Thickness(625, 30, 0, 0)
+};*/
+
+/*new Label()
+{
+    Uid = "Operation_Num_",
+    Content = "x " + craftingItemsCount[step].ToString(),
+    FontSize = 48,
+    Margin = new Thickness(382, 90, 0, 0)
+};*/
+
+/*foreach (Recipe r in currentItem.Recipes)
+{
+    recipeList.Items.Add(r.ItemSlots[0] + ", " + r.ItemSlots[1] + ", " + r.ItemSlots[2] + ", "
+        + r.ItemSlots[3] + ", " + r.ItemSlots[4] + ", " + r.ItemSlots[5] + ", "
+        + r.ItemSlots[6] + ", " + r.ItemSlots[7] + ", " + r.ItemSlots[8]);
+}*/
+
+/*List<string> comboBoxItem = new List<string>();
+foreach(Recipe r in currentItem.Recipes)
+{
+    comboBoxItem.Add("Recipe " + currentItem.Recipes.IndexOf(r) + " - " + currentItem.CurrentRecipeCraftingType().ToString());
+}*/
+
+/*new ComboBox()
+{
+    Uid = "Recipe_List_" + currentItem.Name.Replace(" ", "_"),
+    Name = "Recipe_List_" + currentItem.Name.Replace(" ", "_"),
+    Height = 23,
+    Width = 175,
+    ItemsSource = comboBoxItem,
+    SelectedIndex = currentItem.SelectedRecipe,
+    VerticalAlignment = VerticalAlignment.Top,
+    HorizontalAlignment = HorizontalAlignment.Left,
+    Margin = new Thickness(800, 10, 0, 0)
+};*/
+
+/*new Grid() 
+{
+    Width = 362, 
+    Margin = new Thickness(10, 10, 0, 10), 
+    Background = new ImageBrush(new BitmapImage(new Uri("../../Crafting3x3.png", UriKind.Relative))) { Stretch = Stretch.Uniform },
+    HorizontalAlignment = HorizontalAlignment.Left
+};*/
+
+/*new Grid()
+{
+    Width = 362,
+    Margin = new Thickness(10, 10, 0, 10),
+    //Background = new ImageBrush(new BitmapImage(new Uri("../../Crafting3x3.png", UriKind.Relative))) { Stretch = Stretch.Uniform },
+    HorizontalAlignment = HorizontalAlignment.Left
+};*/
+
+/*Label numOfOperationHolder = (Label)SearchView(rowPos, "Operation_Num_");//view,
+numOfOperationHolder.Content = "x " + amountOfCrafts;
+
+Label itemTotalHolder = (Label)SearchView(rowPos, "Item_Total_");//view,
+itemTotalHolder.Content = "Total Items (Stacks): " + totalFromCraft + " (" + totalStackFromCraft + ")";
+
+Label itemRemainderHolder = (Label)SearchView(rowPos, "Item_Remainder_");//view, 
+itemRemainderHolder.Content = "Remaining/Unused Items: " + remainderFromCraft;
+
+Label itemRequiredHolder = (Label)SearchView(rowPos, "Item_Required_");//view,
+itemRequiredHolder.Content = "Required Items: " + itemsCount[rowPos];*/
+
+
+/*Label numOfOperationHolder = (Label)SearchView(rowPos, "Operation_Num_");//view,
+numOfOperationHolder.Content = "x " + itemsCount[rowPos];*/
+
+/*, double marginLeft, double marginTop, double marginRight, double marginBottom*/
+//List<string> comboBoxItem = new List<string>();
+//comboBoxItem.Add("Recipe " + item.Recipes.IndexOf(r) + " - " + item.CurrentRecipeCraftingType().ToString());
+/*comboBoxItem*/
+//marginLeft, marginTop, marginRight, marginBottom
+
+
+//int columnIndex = Grid.GetColumn(spinnerButtonPressed);
+
+//Grid g = (Grid)spinnerButtonPressed.Parent;
+
+//int startNum = int.Parse(
+//    ((Label)SearchView(rowIndex, "Item_Required_")).Content
+//    .ToString()
+//    .Replace("Required Items: ", "")
+//    );
+
+/*itemsCount[rowIndex] = startNum;*/
+
+/*rowIndex*/ /*g,*/ /*Item i,*/
+
+ /*new Button()
+{
+    Name = "Spinner_UP_" + currentItem.Name.Replace(' ', '_'),
+    Content = "UP",
+    Height = 20,
+    Width = 50,
+    VerticalAlignment = VerticalAlignment.Top,
+    HorizontalAlignment = HorizontalAlignment.Left,
+    VerticalContentAlignment = VerticalAlignment.Center,
+    HorizontalContentAlignment = HorizontalAlignment.Center,
+    ClickMode = ClickMode.Release,
+    Margin = new Thickness(700, 15, 0, 0)
+};
+spinnerNumUp.Click += SpinnerButton_Click;*/
+
+/*new Button()
+{
+    Name = "Spinner_DOWN_" + currentItem.Name.Replace(' ', '_'),
+    Content = "DOWN",
+    Height = 20,
+    Width = 50,
+    VerticalAlignment = VerticalAlignment.Top,
+    HorizontalAlignment = HorizontalAlignment.Left,
+    VerticalContentAlignment = VerticalAlignment.Center,
+    HorizontalContentAlignment = HorizontalAlignment.Center,
+    ClickMode = ClickMode.Release,
+    Margin = new Thickness(700, 55, 0, 0)
+};
+spinnerNumDown.Click += SpinnerButton_Click;*/
+
+/*new TextBox()
+{
+    Name = "Spinner_Display_" + currentItem.Name.Replace(' ', '_'),
+    Uid = "Spinner_Display_" + currentItem.Name.Replace(' ', '_'),
+    Text = "0",
+    Height = 20,
+    Width = 50,
+    VerticalAlignment = VerticalAlignment.Top,
+    HorizontalAlignment = HorizontalAlignment.Left,
+    VerticalContentAlignment = VerticalAlignment.Center,
+    HorizontalContentAlignment = HorizontalAlignment.Right,
+    Margin = new Thickness(700, 35, 0, 0)
+};*/
+
+/*resultItem,*//*resultItem*/
+
+/*foreach(Item i in item)
+{
+    findCraftingStack.Add(i);
+    craftingStack.Add(i);
+}*/
+
+//public static List<Item> fullItemList2 = ItemList.GatherItems();
+
+/*Grid view,*//*Grid view,*/
+/*currentItem.NumPerCraft*//*currentItem.NumPerCraft*//*currentItem.NumPerCraft*/
+/*currentItem.Recipe*/
+
+
+//Item nextItem = findCraftingStack.First();/*nextItem*//*nextItem*//*!= 0*//*frontItem.Recipe*/
+
+
+//craftingStack[step].TypeOfCrafting/*i,*/ /*i,*/ /*i,*/ /*i,*/ /*i,*/ 
+
+
+/*new Grid()
+{
+    Width = 48,
+    Height = 39,
+    Margin = new Thickness(195, 99, 0, 0),
+    Background = new ImageBrush(new BitmapImage(new Uri("../../Images/Crafting UI/Grid_layout_Furnace_Progress_(in-active).png", UriKind.Relative))) { Stretch = Stretch.Uniform },//= new SolidColorBrush(Color.FromRgb(139, 139, 139))
+    VerticalAlignment = VerticalAlignment.Top,
+    HorizontalAlignment = HorizontalAlignment.Left,
+};*/
+
+if (craftInt == 1) 
+{
+                
+}
+else if (craftInt == 2)
+{
+                
+}
+else if (craftInt != 0)
+{
+                
+}
+else
+{
+                
+}
+
+//borderTopLeft.Background = BackUIBackground;
+//borderTopLeft.Background = BackUIBackground;
+
+//backgroundGrid.Children.Add(NewItemSlot(false, 64, 91));
+
+/*double[,] ctSlotMarginsOld = new double[9, 4]
+            {
+                { 11, 38, 0, 0 },
+                { 66, 38, 0, 0 },
+                { 120, 38, 0, 0 },
+                { 11, 93, 0, 0 },
+                { 66, 93, 0, 0 },
+                { 120, 93, 0, 0 },
+                { 11, 148, 0, 0 },
+                { 66, 148, 0, 0 },
+                { 120, 148, 0, 0 }
+            };*/
+
+
+//Border tooltipBorder = new Border()
+//{
+//    BorderThickness = new Thickness(1, 1, 1, 1),
+//    Background = toolTipBackground,
+//    BorderBrush = toolTipBorder,
+//    CornerRadius = new CornerRadius(8, 8, 8, 8)
+//};
+
+//backgroundGrid.Background = new ImageBrush(new BitmapImage(new Uri(craftUILocation[craftInt], UriKind.Relative))) { Stretch = Stretch.Uniform };
+                    

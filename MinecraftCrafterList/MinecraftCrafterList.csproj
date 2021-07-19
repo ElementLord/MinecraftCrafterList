@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6EC1C57E-027D-4029-869C-ED47B9FB6163}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>MinecraftCrafterList</RootNamespace>
+    <AssemblyName>MinecraftCrafterList</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CustomUserControl\BrewingUI.xaml.cs">
+      <DependentUpon>BrewingUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\CraftingPanel.xaml.cs">
+      <DependentUpon>CraftingPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\CraftingTableUI.xaml.cs">
+      <DependentUpon>CraftingTableUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\CustomSpinner.xaml.cs">
+      <DependentUpon>CustomSpinner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\FileSelector.xaml.cs">
+      <DependentUpon>FileSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\ItemButton.xaml.cs">
+      <DependentUpon>ItemButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\ItemSlot.xaml.cs">
+      <DependentUpon>ItemSlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\NoRecipeUI.xaml.cs">
+      <DependentUpon>NoRecipeUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\SmeltingUI.xaml.cs">
+      <DependentUpon>SmeltingUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\UIBackground.xaml.cs">
+      <DependentUpon>UIBackground.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomUserControl\WorldInteractionUI.xaml.cs">
+      <DependentUpon>WorldInteractionUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Miscellaneous\ColourSets.cs" />
+    <Compile Include="Miscellaneous\ImageSet.cs" />
+    <Compile Include="View\CraftingView.xaml.cs">
+      <DependentUpon>CraftingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ItemView.xaml.cs">
+      <DependentUpon>ItemView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CustomUserControl\BrewingUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\CraftingPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\CraftingTableUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\CustomSpinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\FileSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\ItemButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\ItemSlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\NoRecipeUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\SmeltingUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomUserControl\WorldInteractionUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controller\RecipeList.cs" />
+    <Compile Include="Controller\ItemList.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="CustomUserControl\UIBackground.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CraftingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Recipe.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Item_Lists\Minecraft Item Recipes.csv" />
+    <None Include="Item_Lists\Minecraft Items.csv" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Out-Takes Folder\Out-takes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Crafting UI\Crafting3x3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Acacia_Button.png" />
+    <Resource Include="Images\Items\Acacia_Door.png" />
+    <Resource Include="Images\Items\Acacia_Fence_Gate.png" />
+    <Resource Include="Images\Items\Acacia_Fence_Revision_2.png" />
+    <Resource Include="Images\Items\Acacia_Leaves_TextureUpdate.png" />
+    <Resource Include="Images\Items\Acacia_Log_Axis_Y_JE5_BE3.png" />
+    <Resource Include="Images\Items\Acacia_Planks_JE3_BE2.png" />
+    <Resource Include="Images\Items\Acacia_Pressure_Plate.png" />
+    <Resource Include="Images\Items\Acacia_Sapling_JE2_BE2.png" />
+    <Resource Include="Images\Items\Acacia_Sign.png" />
+    <Resource Include="Images\Items\Acacia_Slab_Revision_3.png" />
+    <Resource Include="Images\Items\Acacia_Stairs.png" />
+    <Resource Include="Images\Items\Acacia_Trapdoor.png" />
+    <Resource Include="Images\Items\Bamboo_%28Item%29_JE1_BE1.png" />
+    <Resource Include="Images\Items\Stick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Crafting UI\Furnace.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Iron_Sword_JE2_BE2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Iron_Ingot_JE2_BE2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Iron_Nugget_JE1_BE1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Iron_Ore_JE2_BE2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Block_of_Iron_JE4_BE3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Crafting UI\Grid_layout_Furnace_Progress_%28in-active%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Crafting UI\Grid_layout_Fire_%28in-active%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Out-Takes Folder\CraftingPanel Old Copy.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Block_of_Gold_JE6_BE3.png" />
+    <Resource Include="Images\Items\Carrot_JE2_BE1.png" />
+    <Resource Include="Images\Items\Golden_Carrot_JE4_BE2.png" />
+    <Resource Include="Images\Items\Gold_Ingot_JE3_BE2.png" />
+    <Resource Include="Images\Items\Gold_Nugget_JE3_BE2.png" />
+    <Resource Include="Images\Items\Gold_Ore_JE3_BE2.png" />
+    <Resource Include="Images\Items\Nether_Gold_Ore_JE2_BE1.png" />
+    <Resource Include="Images\Items\Nether_Wart_%28item%29_JE1.png" />
+    <Resource Include="Images\Items\Water_Bottle_JE2_BE2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Out-Takes Folder\Out-takes %28CraftingDisplay%29.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Out-Takes Folder\CraftingView Old Copy.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Items\Missing Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

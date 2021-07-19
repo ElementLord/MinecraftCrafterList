@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="MinecraftCrafterList.CustomUserControl.WorldInteractionUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftCrafterList.CustomUserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="362">
+    <Grid>
+        <local:UIBackground HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="362"/>
+        <Label Height="30" Width="137" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Content="World Interaction" Margin="5,5,0,0"/>
+        <!--x:Name="UIName"-->
+        <local:ItemSlot x:Name="Inventory" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,92,0,0"/>
+        <local:ItemSlot x:Name="World" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,92,0,0"/>
+        <Grid x:Name="Arrow" Height="39" Width="48" Margin="195,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid.Background>
+                <ImageBrush Stretch="Uniform" ImageSource="/MinecraftCrafterList;component/Images/Crafting UI/Grid_layout_Furnace_Progress_(in-active).png"/>
+            </Grid.Background>
+        </Grid>
+        <local:ItemSlot x:Name="Result" Height="61" Width="61" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="289,85,0,0"/>
+    </Grid>
+</UserControl>
