@@ -9,7 +9,6 @@
     <Grid>
         <local:UIBackground HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="362"/>
         <Label Height="30" Width="137" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Content="World Interaction" Margin="5,5,0,0"/>
-        <!--x:Name="UIName"-->
         <local:ItemSlot x:Name="Inventory" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,92,0,0"/>
         <local:ItemSlot x:Name="World" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,92,0,0"/>
         <Grid x:Name="Arrow" Height="39" Width="48" Margin="195,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">

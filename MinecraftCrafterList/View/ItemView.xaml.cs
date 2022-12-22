@@ -5,17 +5,9 @@ using MinecraftCrafterList.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MinecraftCrafterList.View
 {
@@ -30,14 +22,15 @@ namespace MinecraftCrafterList.View
         public ItemView()
         {
             List<string> colourEnumList = new List<string>();
-            
+
             InitializeComponent();
             ItemListDisplay.ItemsSource = ItemListDisplayed;
-            
+
             foreach(Item.TextColor textColor in Enum.GetValues(typeof(Item.TextColor)))
             {
                 colourEnumList.Add(textColor.ToString());
             }
+
             NameColour.ItemsSource = colourEnumList;
             FlavourColour1.ItemsSource = colourEnumList;
             FlavourColour2.ItemsSource = colourEnumList;
@@ -45,32 +38,19 @@ namespace MinecraftCrafterList.View
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog() 
-            { 
+            OpenFileDialog fileDialog = new OpenFileDialog()
+            {
                 Multiselect = false,
                 Filter = "Image files (*.png;*.jpeg;*.gif)|*.png;*.jpeg;*.gif|All files (*.*)|*.*"
             };
-            
+
             if (fileDialog.ShowDialog() == true)
             {
                 path = fileDialog.FileName;
                 FilePath.Text = path;
                 ImageDisplay.Source = ImageSet.LoadImage(path);
-                //LoadImage();
             }
         }
-
-        //public void LoadImage()
-        //{
-        //    try
-        //    {
-        //        ImageDisplay.Source = new BitmapImage(new Uri(path));//, UriKind.Relative
-        //    }
-        //    catch (Exception) //e
-        //    {
-        //        ImageDisplay.Source = ImageSet.MissingImage;//new BitmapImage(new Uri("../../Images/Items/Missing Image.png", UriKind.Relative));
-        //    }
-        //}
 
         private void ItemListDisplay_SectionChanged(object sender, RoutedEventArgs e)
         {
@@ -78,9 +58,6 @@ namespace MinecraftCrafterList.View
 
             ItemName.Text = i.Name;
             NameColour.SelectedIndex = (int)i.NameColor;
-            //path = i.ImageUrl;
-            //FilePath.Text = path;
-            //LoadImage();
             FilePath.Text = i.ImageUrl;
             ImageDisplay.Source = i.ImageBitmap;
             StackSize.Text = i.StackSize + "";
@@ -108,7 +85,7 @@ namespace MinecraftCrafterList.View
                 Item i = ItemListDisplayed.ElementAt(ItemListDisplay.SelectedIndex);
 
                 i.Name = ItemName.Text;
-                i.NameColor = (Item.TextColor)NameColour.SelectedIndex;//(int)
+                i.NameColor = (Item.TextColor)NameColour.SelectedIndex;
                 if (!i.ImageUrl.Equals(FilePath.Text))
                 {
                     i.ImageUrl = FilePath.Text;
@@ -116,14 +93,11 @@ namespace MinecraftCrafterList.View
                 }
                 i.StackSize = int.Parse(StackSize.Text);
                 i.FlavourText1 = FlavourText1.Text;
-                i.FlavourTextColor1 = (Item.TextColor)FlavourColour1.SelectedIndex;//(int)
+                i.FlavourTextColor1 = (Item.TextColor)FlavourColour1.SelectedIndex;
                 i.FlavourText2 = FlavourText2.Text;
-                i.FlavourTextColor2 = (Item.TextColor)FlavourColour2.SelectedIndex;//(int)
+                i.FlavourTextColor2 = (Item.TextColor)FlavourColour2.SelectedIndex;
 
                 RefreshItemListDisplay();
-                //CustomUserControl.ItemButton.RefreshItemButton();
-                //ItemListDisplay.InvalidateArrange();
-                //ItemListDisplay.UpdateLayout();
             }
         }
     }

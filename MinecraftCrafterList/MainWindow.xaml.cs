@@ -30,8 +30,7 @@ namespace MinecraftCrafterList
         public static List<Item> fullItemList = ItemList.GatherItems2(fullRecipeList);
 
         //Pages
-        //public static MainWindow mainWindow;
-        public static Frame cav;
+        public static Frame changableView;
         public static CraftingView pageCV = new CraftingView();
         public static ItemView pageIV = new ItemView();
 
@@ -41,7 +40,7 @@ namespace MinecraftCrafterList
         public MainWindow()
         {
             InitializeComponent();
-            cav = ChangableView;//mainWindow = this;
+            changableView = ChangableView;
             PageChange(0);
         }
 
@@ -50,10 +49,10 @@ namespace MinecraftCrafterList
             switch (pageNum)
             {
                 case 0:
-                    cav.Content = pageCV;/*mainWindow*/
+                    changableView.Content = pageCV;
                     break;
                 case 1:
-                    cav.Content = pageIV;/*mainWindow*/
+                    changableView.Content = pageIV;
                     break;
                 default:
                     break;
@@ -92,7 +91,6 @@ namespace MinecraftCrafterList
             Single_Item.IsChecked = true;
             singleItemMode = true;
             Multiple_Items.IsChecked = false;
-            //ClearListAndView(true, true, false);
             CraftingView.firstTimeMulti = false;
         }
 
@@ -101,12 +99,11 @@ namespace MinecraftCrafterList
             Single_Item.IsChecked = false;
             singleItemMode = false;
             Multiple_Items.IsChecked = true;
-            //ClearListAndView(true, true, false);
         }
 
         private void RunMultiCraftMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Multiple_Items.IsChecked == true)
+            if (Multiple_Items.IsChecked)
             {
                 if (CraftingView.findCraftingStack.Count() == 0)
                 {
@@ -114,7 +111,6 @@ namespace MinecraftCrafterList
                 }
                 else
                 {
-                    //ClearListAndView(false, false, true);
                     CraftingView.firstTimeMulti = false;
                     pageCV.RunTheStuff();
                     foreach (ItemButton b in pageCV.ItemDisplay.Children)
@@ -132,7 +128,7 @@ namespace MinecraftCrafterList
         //-Items View
         private void AddItemMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void SubmitEditMenuButton_Click(object sender, RoutedEventArgs e)
@@ -142,7 +138,7 @@ namespace MinecraftCrafterList
 
         private void RemoveItemMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void EditingMode_Click(object sender, RoutedEventArgs e)
@@ -176,81 +172,5 @@ namespace MinecraftCrafterList
                 Submit_Edit.Visibility = Visibility.Collapsed;
             }
         }
-
-
-        //private void FileMenuButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MenuItem menuItemPressed = (MenuItem)sender;
-
-        //    if (menuItemPressed.Name.Contains("Exit"))
-        //    {
-        //        Application.Current.Shutdown();
-        //    }
-        //}
-
-
-        //private void ModesMenuButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MenuItem menuItemPressed = (MenuItem)sender;
-
-        //    if (menuItemPressed.Name.Contains("Single_Item"))
-        //    {
-        //        Single_Item.IsChecked = true;
-        //        singleItemMode = true;
-        //        Multiple_Items.IsChecked = false;
-        //        //ClearListAndView(true, true, false);
-        //        CraftingView.firstTimeMulti = false;
-        //    }
-        //    else if (menuItemPressed.Name.Contains("Multiple_Items"))
-        //    {
-        //        Single_Item.IsChecked = false;
-        //        singleItemMode = false;
-        //        Multiple_Items.IsChecked = true;
-        //        //ClearListAndView(true, true, false);
-        //    }
-        //    else if (menuItemPressed.Name.Contains("Run_Multi_Craft"))
-        //    {
-        //        if (Multiple_Items.IsChecked == true)
-        //        {
-        //            if (CraftingView.findCraftingStack.Count() == 0)
-        //            {
-        //                MessageBox.Show("No items have been selected.", "Error");
-        //            }
-        //            else
-        //            {
-        //                //ClearListAndView(false, false, true);
-        //                CraftingView.firstTimeMulti = false;
-        //                /*RunTheStuff();
-        //                foreach (Button b in ItemDisplay.Children)
-        //                {
-        //                    b.BorderBrush = ColourSets.itemButtonBorderBase;
-        //                }*/
-        //            }
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("'Multiple Items' Modes must be selected to use 'Run Multi Craft'.", "Error");
-        //        }
-        //    }
-        //}
-
-        //private void ItemsMenuButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MenuItem menuItemPressed = (MenuItem)sender;
-
-        //    if (menuItemPressed.Name.Contains("Add_Item"))
-        //    {
-        //        PageChange(1);
-        //    }
-        //    else if (menuItemPressed.Name.Contains("Edit_Item"))
-        //    {
-
-        //    }
-        //    else if (menuItemPressed.Name.Contains("Remove_Item"))
-        //    {
-
-        //    }
-        //}
-
     }
 }

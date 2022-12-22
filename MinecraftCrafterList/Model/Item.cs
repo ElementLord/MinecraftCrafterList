@@ -6,14 +6,13 @@ namespace MinecraftCrafterList.Model
 {
     public class Item
     {
-        //public enum CraftingType { No_Recipe = 0, Crafting_Table = 1, Smelting = 2, Brewing = 3, Other = 4 }
         //public List<string> modNames = new List<string> {"Minecraft"};
         public enum TextColor { White = 0, Grey = 1, Blue = 2, Red = 3 }
 
         public string Name { get; set; }
         public string Mod { get; set; }
         public string ImageUrl { get; set; }
-        public BitmapImage ImageBitmap { get; set; } //
+        public BitmapImage ImageBitmap { get; set; }
         public List<Recipe> Recipes { get; set; } 
         public int SelectedRecipe { get; set; }
         public int StackSize { get; set; }
@@ -25,10 +24,6 @@ namespace MinecraftCrafterList.Model
         public TextColor FlavourTextColor2 { get; set; }
 
         //public double OperationPerFuel { get; set; }
-
-        /*public CraftingType TypeOfCrafting { get; set; }
-        public String[] Recipe { get; set; }
-        public int NumPerCraft { get; set; }*/
 
         public Recipe.CraftingType CurrentRecipeCraftingType()
         {

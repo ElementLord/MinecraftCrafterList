@@ -9,6 +9,5 @@
     <Grid x:Name="ItemSlotBackground" Background="#FF8B8B8B">
         <Border x:Name="ItemSlotLeftTop" BorderBrush="#FF373737" BorderThickness="2,2,0,0" Margin="0,0,2,2"/>
         <Border x:Name="ItemSlotRightBottom" BorderBrush="White" BorderThickness="0,0,2,2" Margin="2,2,0,0"/>
-        <!--<Grid x:Name="ItemPlace" Margin="2"/>-->
     </Grid>
 </UserControl>

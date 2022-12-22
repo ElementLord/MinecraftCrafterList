@@ -9,7 +9,6 @@
     <Grid>
         <local:UIBackground HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="362"/>
         <Label Height="30" Width="137" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Content="Smelting" Margin="5,5,0,0"/>
-        <!--x:Name="UIName"-->
         <local:ItemSlot x:Name="Input" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="63,43,0,0"/>
         <local:ItemSlot x:Name="Fuel" Height="49" Width="49" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="63,141,0,0"/>
         <Grid x:Name="Fire" Height="49" Width="49" Margin="63,92,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">

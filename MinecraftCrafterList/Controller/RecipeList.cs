@@ -10,7 +10,6 @@ namespace MinecraftCrafterList.Controller
         public static List<Recipe> GatherRecipes()
         {
             string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Item Recipes.csv");
-            //string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Item Recipes.csv");
             List<Recipe> allReceipes = new List<Recipe>();
             char[] spearator = { ',' };
 
@@ -18,7 +17,7 @@ namespace MinecraftCrafterList.Controller
             {
                 string[] splitLine = line.Split(spearator);
 
-                if (splitLine.Length != 1 && !splitLine[0].Equals("Item Result"))/*!splitLine[0].Equals("")*/
+                if (splitLine.Length != 1 && !splitLine[0].Equals("Item Result"))
                 {
                     allReceipes.Add(new Recipe
                     {
@@ -29,15 +28,6 @@ namespace MinecraftCrafterList.Controller
                         ItemSlots = new string[]{ splitLine[4], splitLine[5], splitLine[6],
                                                     splitLine[7], splitLine[8], splitLine[9],
                                                     splitLine[10], splitLine[11], splitLine[12] }
-                        //ItemSlot1 = splitLine[4],
-                        //ItemSlot2 = splitLine[5],
-                        //ItemSlot3 = splitLine[6],
-                        //ItemSlot4 = splitLine[7],
-                        //ItemSlot5 = splitLine[8],
-                        //ItemSlot6 = splitLine[9],
-                        //ItemSlot7 = splitLine[10],
-                        //ItemSlot8 = splitLine[11],
-                        //ItemSlot9 = splitLine[12]
                     });
                 }
             }
@@ -48,7 +38,7 @@ namespace MinecraftCrafterList.Controller
         public static IEnumerable<Recipe> RecipeSearch(List<Recipe> list, string query)
         {
             return from itemFromList in list
-                   where itemFromList.ItemResult.Equals(query)/*.EndsWith*//*.Contains*/
+                   where itemFromList.ItemResult.Equals(query)
                    select itemFromList;
         }
     }

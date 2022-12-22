@@ -17,17 +17,5 @@ namespace MinecraftCrafterList.Model
         public int NumPerCraft { get; set; }
         public string[] ItemSlots { get; set; }
         //public int priority { get; set; }
-
-        /*
-        public string ItemSlot1 { get; set; }
-        public string ItemSlot2 { get; set; }
-        public string ItemSlot3 { get; set; }
-        public string ItemSlot4 { get; set; }
-        public string ItemSlot5 { get; set; }
-        public string ItemSlot6 { get; set; }
-        public string ItemSlot7 { get; set; }
-        public string ItemSlot8 { get; set; }
-        public string ItemSlot9 { get; set; }
-        */
     }
 }

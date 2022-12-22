@@ -4,17 +4,10 @@ using MinecraftCrafterList.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MinecraftCrafterList.CustomUserControl
 {
@@ -26,7 +19,6 @@ namespace MinecraftCrafterList.CustomUserControl
         public Item ItemForDisplay { get; set; }
         public int StepOfItem { get; set; }
         private readonly bool PastInitiation = false;
-        //public double AmountOfCrafts { get; set; }
 
         public CraftingPanel(Item item, int step)
         {
@@ -92,7 +84,6 @@ namespace MinecraftCrafterList.CustomUserControl
 
         public void SetValue()
         {
-            //int numOfItemsUsed = 0;
             double totalNum = CraftingView.craftingItemsCount[StepOfItem] + Spinner.GetCurrentNumber();
             double amountOfCrafts;
             double totalFromCraft;
@@ -104,25 +95,9 @@ namespace MinecraftCrafterList.CustomUserControl
             }
             else
             {
-                amountOfCrafts = Math.Ceiling(totalNum / (ItemForDisplay.CurrentRecipeNumPerCraft() * 1.0)); /*CraftingView.craftingItemsCount[step]*//*currentItem*/
-                totalFromCraft = ItemForDisplay.CurrentRecipeNumPerCraft() * amountOfCrafts; /*currentItem*/
+                amountOfCrafts = Math.Ceiling(totalNum / (ItemForDisplay.CurrentRecipeNumPerCraft() * 1.0));
+                totalFromCraft = ItemForDisplay.CurrentRecipeNumPerCraft() * amountOfCrafts;
             }
-
-            //switch (ItemForDisplay.CurrentRecipeCraftingType())
-            //{
-            //    case Recipe.CraftingType.Crafting_Table:
-            //        numOfItemsUsed = 9;
-            //        break;
-            //    case Recipe.CraftingType.Smelting:
-            //        numOfItemsUsed = 1;
-            //        break;
-            //    case Recipe.CraftingType.Brewing:
-            //        numOfItemsUsed = 4;
-            //        break;
-            //    case Recipe.CraftingType.Other:
-            //        numOfItemsUsed = 2;
-            //        break;
-            //}
 
             double totalStackFromCraft = totalFromCraft / ItemForDisplay.StackSize;
             double remainderFromCraft = totalFromCraft - totalNum;
@@ -132,15 +107,13 @@ namespace MinecraftCrafterList.CustomUserControl
             ItemRequired.Content = "Required Items: " + CraftingView.craftingItemsCount[StepOfItem];
             NumOfOperation.Content = "x " + amountOfCrafts;
 
-            foreach (string name in ItemForDisplay.CurrentRecipeItemSlots())/*item.Recipe*/ //int i = 0; i < numOfItemsUsed; i++
+            foreach (string name in ItemForDisplay.CurrentRecipeItemSlots())
             {
                 IEnumerable<Item> craftingItemQuery = ItemList.ItemSearch(MainWindow.fullItemList, name);
 
                 if (craftingItemQuery.Count() != 0)
                 {
-                    //for (int i = 0; i < AmountOfCrafts; i++){}
-
-                    int index = CraftingView.craftingStack.IndexOf(craftingItemQuery.First());//CraftingView.craftingStack.IndexOf(craftingItemQuery.First())
+                    int index = CraftingView.craftingStack.IndexOf(craftingItemQuery.First());
                     CraftingView.craftingItemsCount[index] = CraftingView.craftingItemsCount[index] + (int)amountOfCrafts;
                 }
             }
@@ -176,19 +149,13 @@ namespace MinecraftCrafterList.CustomUserControl
                     }
                 }
 
-                //bool recipeSelected = false;
-                //if (recipeNum == ItemForDisplay.SelectedRecipe)
-                //{
-                //    recipeSelected = true;
-                //}
                 recipeNum++;
 
                 cbi.Add(new ComboBoxItem()
                 {
                     Content = comboBoxItem,
                     HorizontalContentAlignment = HorizontalAlignment.Left,
-                    VerticalContentAlignment = VerticalAlignment.Center,
-                    //IsSelected = recipeSelected
+                    VerticalContentAlignment = VerticalAlignment.Center
                 });
             }
 

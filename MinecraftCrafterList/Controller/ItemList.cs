@@ -9,36 +9,9 @@ namespace MinecraftCrafterList.Controller
 {
     public class ItemList
     {
-        /*public static List<Item> GatherItems()
-        {
-            string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft.txt");
-            List<Item> allItems = new List<Item>();
-            char[] spearator = { ',' };
-            char[] craftingSpearator = { '|' };
-
-            foreach(string line in lines)
-            {
-                String[] splitLine = line.Split(spearator);
-
-                allItems.Add(new Item
-                {
-                    Name = splitLine[0],
-                    Mod = splitLine[1],
-                    ImageUrl = splitLine[2],
-                    TypeOfCrafting = (Item.CraftingType)int.Parse(splitLine[3]),
-                    Recipe = splitLine[4].Split(craftingSpearator),
-                    NumPerCraft = int.Parse(splitLine[5]),
-                    StackSize = int.Parse(splitLine[6])
-                });
-            }
-
-            return allItems;
-        }*/
-
         public static List<Item> GatherItems2(List<Recipe> recipe)
         {
             string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv");
-            //string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv");
             List<Item> allItems = new List<Item>();
             char[] spearator = { ',' };
 
@@ -73,7 +46,7 @@ namespace MinecraftCrafterList.Controller
         public static IEnumerable<Item> ItemSearch(List<Item> itemList, string query)
         {
             return from itemFromList in itemList
-                    where itemFromList.Name.EndsWith(query)/*.Contains*/
+                    where itemFromList.Name.EndsWith(query)
                     select itemFromList;
         }
 

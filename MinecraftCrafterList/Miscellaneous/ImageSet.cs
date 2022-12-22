@@ -13,12 +13,10 @@ namespace MinecraftCrafterList.Miscellaneous
 
             try
             {
-                /*ImageDisplay.Source*/ 
-                image = new BitmapImage(new Uri(path, UriKind.Relative));//
+                image = new BitmapImage(new Uri(path, UriKind.Relative));
             }
             catch (Exception) //e
             {
-                /*ImageDisplay.Source*/
                 image = MissingImage;
             }
 
@@ -31,12 +29,10 @@ namespace MinecraftCrafterList.Miscellaneous
 
             try
             {
-                /*ImageDisplay.Source*/
-                image = new BitmapImage(new Uri(path));//
+                image = new BitmapImage(new Uri(path));
             }
             catch (Exception) //e
             {
-                /*ImageDisplay.Source*/
                 image = MissingImage;
             }
 

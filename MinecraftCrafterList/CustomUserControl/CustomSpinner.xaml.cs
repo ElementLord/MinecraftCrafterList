@@ -1,19 +1,9 @@
 ﻿using MinecraftCrafterList.View;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MinecraftCrafterList.CustomUserControl
 {
@@ -23,18 +13,12 @@ namespace MinecraftCrafterList.CustomUserControl
     public partial class CustomSpinner : UserControl
     {
         private int CurrentNumber = 0;
-        //public bool CraftingTextChanged { get; set; }
         public CraftingPanel CraftingPanel { get; set; }
-        
+
         public CustomSpinner()
         {
             InitializeComponent();
             SpinDisplay.Text = CurrentNumber.ToString();
-            //craftingPanel = (CraftingPanel)Parent;
-            //if (CraftingTextChanged)
-            //{
-            //    SpinDisplay.TextChanged += SpinDisplay_Crafting_TextChanged;
-            //}
         }
 
         public int GetCurrentNumber()
@@ -51,7 +35,6 @@ namespace MinecraftCrafterList.CustomUserControl
         {
             CurrentNumber++;
             SpinDisplay.Text = CurrentNumber.ToString();
-            //craftingPanel.SetValue();
         }
 
         private void SpinDown_Click(object sender, RoutedEventArgs e)
@@ -66,7 +49,6 @@ namespace MinecraftCrafterList.CustomUserControl
             }
 
             SpinDisplay.Text = CurrentNumber.ToString();
-            //craftingPanel.SetValue();
         }
 
         private void SpinDisplay_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -85,14 +67,10 @@ namespace MinecraftCrafterList.CustomUserControl
             {
                 CurrentNumber = int.Parse(SpinDisplay.Text);
             }
-
-            //craftingPanel.SetValue();
         }
 
         private void SpinDisplay_Crafting_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //craftingPanel.SetValue();
-            
             for (int i = 0; i < CraftingView.numOfSelectedItems; i++)
             {
                 CraftingView.craftingItemsCount[i] = 1;
