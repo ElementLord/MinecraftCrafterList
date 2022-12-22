@@ -1,10 +1,9 @@
 ﻿using MinecraftCrafterList.Miscellaneous;
 using MinecraftCrafterList.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 
 namespace MinecraftCrafterList.Controller
 {
@@ -39,13 +38,13 @@ namespace MinecraftCrafterList.Controller
         public static List<Item> GatherItems2(List<Recipe> recipe)
         {
             string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv");
+            //string[] lines = File.ReadAllLines(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv");
             List<Item> allItems = new List<Item>();
             char[] spearator = { ',' };
 
             foreach (string line in lines)
             {
-                String[] splitLine = line.Split(spearator);
-                
+                string[] splitLine = line.Split(spearator);
 
                 if (splitLine.Length != 1 && !splitLine[0].Equals("Item Name"))
                 {
