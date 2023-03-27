@@ -3,6 +3,7 @@ using MinecraftCrafterList.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 //using System.Windows.Media.Imaging;
 
 namespace MinecraftCrafterList.Controller
@@ -41,6 +42,23 @@ namespace MinecraftCrafterList.Controller
             }
 
             return allItems;
+        }
+
+        public static void SendItem(List<Item> fullItemList)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Item Name,Mod,Image Location,Stack Size,Item Name Colour,Flavour Text 1,Flavour Text Colour 1,Flavour Text 2,Flavour Text Colour 2");
+            //string s = "";
+
+            foreach (Item item in fullItemList)
+            {
+                //sb.AppendLine(item.Name + "," + item.Mod + "," + item.ImageUrl + "," + item.StackSize + "," + item.NameColor + "," + item.FlavourText1 + "," + item.FlavourTextColor1 + "," + item.FlavourText2 + "," + item.FlavourTextColor2);
+                sb.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", item.Name, item.Mod, item.ImageUrl, item.StackSize, item.NameColor, item.FlavourText1, item.FlavourTextColor1, item.FlavourText2, item.FlavourTextColor2));
+                //s = s + item.Name + "," + item.Mod + "," + item.ImageUrl + "," + item.StackSize + "," + item.NameColor + "," + item.FlavourText1 + "," + item.FlavourTextColor1 + "," + item.FlavourText2 + "," + item.FlavourTextColor2 + "\n";
+            }
+
+            //File.WriteAllText(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv", s);
+            File.WriteAllText(@"C:\Users\ihami\Desktop\Personal\Code Projects\MinecraftCrafterList\MinecraftCrafterList\Item_Lists\Minecraft Items.csv", sb.ToString());
         }
 
         public static IEnumerable<Item> ItemSearch(List<Item> itemList, string query)
